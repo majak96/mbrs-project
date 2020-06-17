@@ -7,11 +7,11 @@ public class FMLinkedProperty extends FMProperty {
 	private String mappedBy;
 	private Boolean orphanRemoval;
 	private Boolean optional;
-	
+
 	public FMLinkedProperty() {
 		super();
 	}
-	
+
 	public FMLinkedProperty(FMType type, MethodPropertyAccessModifier accessModifier, Integer lower, Integer upper,
 			Boolean unique, CascadeType cascade, FetchType fetch, String mappedBy, Boolean orphanRemoval,
 			Boolean optional) {
@@ -62,5 +62,5 @@ public class FMLinkedProperty extends FMProperty {
 	public void setOptional(Boolean optional) {
 		this.optional = optional;
 	}
-	
+
 }

@@ -11,6 +11,11 @@ public class FMPersistentProperty extends FMProperty {
 	public FMPersistentProperty() {
 		super();
 	}
+	
+	public FMPersistentProperty(String name, MethodPropertyAccessModifier modifier) {
+		super(name, modifier);
+	}
+
 
 	public FMPersistentProperty(FMType type, MethodPropertyAccessModifier accessModifier, Integer lower, Integer upper,
 			Boolean unique, Boolean id, String columnName, Integer length, Integer precision,

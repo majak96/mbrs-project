@@ -9,11 +9,16 @@ public class FMProperty extends FMNamedElement {
 	private Integer lower;
 
 	private Integer upper;
-	
+
 	private Boolean unique;
 
 	public FMProperty() {
-		
+
+	}
+
+	public FMProperty(String name, MethodPropertyAccessModifier modifier) {
+		super(name);
+		this.accessModifier = modifier;
 	}
 
 	public FMProperty(FMType type, MethodPropertyAccessModifier accessModifier, Integer lower, Integer upper,

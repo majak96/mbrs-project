@@ -24,6 +24,10 @@ public class FMEntity extends FMType {
 
 	private Set<FMType> importedPackages = new HashSet<FMType>();
 
+	public FMEntity(String name, String typePackage) {
+		super(name, typePackage);
+	}
+	
 	public FMEntity(String name, String typePackage, FMEntity ancestor, ClassAccessModifier accessModifier,
 			String tableName, Boolean create, Boolean update, Boolean delete, List<FMProperty> properties,
 			Set<FMType> importedPackages) {

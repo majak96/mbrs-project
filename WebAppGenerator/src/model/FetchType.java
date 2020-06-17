@@ -1,6 +1,6 @@
 package model;
 
 public enum FetchType {
-	EAGER,
+	EAGER, 
 	LAZY
 }
