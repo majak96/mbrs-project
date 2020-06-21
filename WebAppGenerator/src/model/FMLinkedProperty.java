@@ -12,10 +12,9 @@ public class FMLinkedProperty extends FMProperty {
 		super();
 	}
 
-	public FMLinkedProperty(FMType type, MethodPropertyAccessModifier accessModifier, Integer lower, Integer upper,
-			Boolean unique, CascadeType cascade, FetchType fetch, String mappedBy, Boolean orphanRemoval,
+	public FMLinkedProperty(FMType type, MethodPropertyAccessModifier accessModifier, Integer lower, Integer upper, CascadeType cascade, FetchType fetch, String mappedBy, Boolean orphanRemoval,
 			Boolean optional) {
-		super(type, accessModifier, lower, upper, unique);
+		super(type, accessModifier, lower, upper);
 		this.cascade = cascade;
 		this.fetch = fetch;
 		this.mappedBy = mappedBy;

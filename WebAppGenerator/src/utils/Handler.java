@@ -7,10 +7,13 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
+import model.CascadeType;
 import model.FMEntity;
+import model.FMLinkedProperty;
 import model.FMPersistentProperty;
 import model.FMProperty;
 import model.FMType;
+import model.FetchType;
 import model.GeneratedValue;
 import model.MethodPropertyAccessModifier;
 
@@ -18,7 +21,9 @@ public class Handler extends DefaultHandler {
 
 	private Map<String, FMEntity> entities = new HashMap<>();
 	private Map<String, FMPersistentProperty> persistentProperties = new HashMap<>();
+	private Map<String, FMLinkedProperty> linkedProperties = new HashMap<>();
 	private Map<String, FMType> primitiveTypes = new HashMap<>();
+	private Map<String, String> associationMap = new HashMap<>();
 
 	private String currentClass;
 	private String currentProperty;
@@ -42,7 +47,7 @@ public class Handler extends DefaultHandler {
 		switch (qName) {
 		case "packagedElement":
 			if (attributes.getValue("xmi:type") != null && attributes.getValue("xmi:type").equals("uml:Class")) {
-				// TODO: DEcide what to do with class visibility
+				// TODO: Decide what to do with class visibility
 				currentClass = attributes.getValue("xmi:id");
 				FMEntity newEntity = new FMEntity(attributes.getValue("name"), "");
 				entities.put(attributes.getValue("xmi:id"), newEntity);
@@ -60,20 +65,30 @@ public class Handler extends DefaultHandler {
 			break;
 
 		case "ownedAttribute":
+			FMEntity entity = this.entities.get(currentClass);
+			currentProperty = attributes.getValue("xmi:id");
+			MethodPropertyAccessModifier modifier = MethodPropertyAccessModifier
+					.valueOf(attributes.getValue("visibility").toUpperCase());
 			if (attributes.getValue("association") == null && attributes.getValue("xmi:type") != null
 					&& attributes.getValue("xmi:type").equals("uml:Property")) {
-
-				MethodPropertyAccessModifier modifier = MethodPropertyAccessModifier
-						.valueOf(attributes.getValue("visibility").toUpperCase());
 				FMPersistentProperty newProperty = new FMPersistentProperty(attributes.getValue("name"), modifier);
 				entities.get(currentClass).addProperty(newProperty);
-				currentProperty = attributes.getValue("xmi:id");
 				persistentProperties.put(currentProperty, newProperty);
+				entity.addProperty(newProperty);
 
 			} else if (attributes.getValue("association") != null) {
-
 				// TODO: association problem
-				persistentProperties.put(currentProperty, new FMPersistentProperty());
+				FMLinkedProperty property = new FMLinkedProperty();
+
+				if (attributes.getValue("name") != null) {
+					property.setName(attributes.getValue("name"));
+				}
+
+				this.associationMap.put(currentProperty, attributes.getValue("type"));
+				property.setAccessModifier(modifier);
+				linkedProperties.put(currentProperty, property);
+				entity.addProperty(property);
+
 			}
 			break;
 
@@ -89,27 +104,37 @@ public class Handler extends DefaultHandler {
 			break;
 
 		case "lowerValue":
-			if (attributes.getValue("value") != null) {
-				persistentProperties.get(currentProperty).setLower(Integer.parseInt(attributes.getValue("value")));
-			}
+			Integer valueLower = (attributes.getValue("value") == null)? 0 : Integer.parseInt(attributes.getValue("value"));
+			if (this.linkedProperties.containsKey(this.currentProperty)) {
+					this.linkedProperties.get(currentProperty).setLower(valueLower);
+				} else if (this.persistentProperties.containsKey(this.currentProperty)) {
+					this.persistentProperties.get(currentProperty).setLower(valueLower);
+				}
+			
 			break;
 
 		case "upperValue":
 			if (attributes.getValue("value") != null) {
 				Integer value;
+
 				if (attributes.getValue("value").equals("*")) {
 					value = -1;
 				} else {
 					value = Integer.parseInt(attributes.getValue("value"));
 				}
-				persistentProperties.get(currentProperty).setUpper(value);
+
+				if (this.linkedProperties.containsKey(this.currentProperty)) {
+					this.linkedProperties.get(currentProperty).setUpper(value);
+				} else if (this.persistentProperties.containsKey(this.currentProperty)) {
+					this.persistentProperties.get(currentProperty).setUpper(value);
+				}
 			}
 			break;
 
 		case "BackendProfile:Entity":
 			String baseClass = attributes.getValue("base_Class");
 			if (entities.containsKey(baseClass)) {
-				FMEntity entity = entities.get(baseClass);
+				entity = entities.get(baseClass);
 				if (attributes.getValue("tableName") != null) {
 					entity.setTableName(attributes.getValue("tableName"));
 				}
@@ -139,15 +164,55 @@ public class Handler extends DefaultHandler {
 				}
 				if (attributes.getValue("unique") != null) {
 					persistentProperty.setUnique(attributes.getValue("unique").equals("true"));
-				} else {
-					persistentProperty.setUnique(false);
 				}
 			}
 			break;
+
+		case "BackendProfile:LinkedProperty":
+			baseProperty = attributes.getValue("base_Property");
+			if (this.linkedProperties.containsKey(baseProperty)) {
+				FMLinkedProperty linkedProperty = (FMLinkedProperty) this.linkedProperties.get(baseProperty);
+
+				if (attributes.getValue("cascade") != null) {
+					linkedProperty.setCascade(CascadeType.valueOf(attributes.getValue("cascade")));
+				}
+
+				if (attributes.getValue("fetch") != null) {
+					linkedProperty.setFetch(FetchType.valueOf(attributes.getValue("fetch")));
+				}
+
+				if (attributes.getValue("mappedBy") != null) {
+					linkedProperty.setMappedBy(attributes.getValue("mappedBy"));
+				}
+
+				if (attributes.getValue("orphanRemoval") != null) {
+					linkedProperty.setOrphanRemoval(Boolean.parseBoolean(attributes.getValue("orphanRemoval")));
+				}
+
+				if (attributes.getValue("optional") != null) {
+					linkedProperty.setOptional(Boolean.parseBoolean(attributes.getValue("optional")));
+				}
+
+			}
+			break;
+
 		}
 	}
 
 	public void endDocument() throws SAXException {
+
+		for (Map.Entry<String, String> entry : this.associationMap.entrySet()) {
+			if (this.entities.containsKey(entry.getValue()) && this.linkedProperties.containsKey(entry.getKey())) {
+				FMLinkedProperty linkedProperty = this.linkedProperties.get(entry.getKey());
+				FMEntity entity = this.entities.get(entry.getValue());
+				
+				if (linkedProperty.getName() == null)
+					linkedProperty.setName(entity.getName().toLowerCase());
+
+				linkedProperty.setType(entity);
+			}
+		}
+
 		System.out.println("******************************************");
 
 		for (Map.Entry<String, FMEntity> entry : entities.entrySet()) {
@@ -169,6 +234,13 @@ public class Handler extends DefaultHandler {
 					System.out.println("Property len: " + persistentProperty.getLength());
 					System.out.println("Property precision: " + persistentProperty.getPrecision());
 					System.out.println("Property unique: " + persistentProperty.getUnique());
+				} else if (fmp instanceof FMLinkedProperty) {
+					FMLinkedProperty linkedProperty = (FMLinkedProperty) fmp;
+					System.out.println("Property cascade: " + linkedProperty.getCascade());
+					System.out.println("Property fetch: " + linkedProperty.getFetch());
+					System.out.println("Property mappedBy: " + linkedProperty.getMappedBy());
+					System.out.println("Property orphanRemoval: " + linkedProperty.getOrphanRemoval());
+					System.out.println("Property optional: " + linkedProperty.getOptional());
 				}
 				System.out.println("******************************************");
 

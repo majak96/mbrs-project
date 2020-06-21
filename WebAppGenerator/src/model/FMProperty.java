@@ -10,7 +10,6 @@ public class FMProperty extends FMNamedElement {
 
 	private Integer upper;
 
-	private Boolean unique;
 
 	public FMProperty() {
 
@@ -21,14 +20,12 @@ public class FMProperty extends FMNamedElement {
 		this.accessModifier = modifier;
 	}
 
-	public FMProperty(FMType type, MethodPropertyAccessModifier accessModifier, Integer lower, Integer upper,
-			Boolean unique) {
+	public FMProperty(FMType type, MethodPropertyAccessModifier accessModifier, Integer lower, Integer upper) {
 		super();
 		this.type = type;
 		this.accessModifier = accessModifier;
 		this.lower = lower;
 		this.upper = upper;
-		this.unique = unique;
 	}
 
 	public FMType getType() {
@@ -63,12 +60,5 @@ public class FMProperty extends FMNamedElement {
 		this.upper = upper;
 	}
 
-	public Boolean getUnique() {
-		return unique;
-	}
-
-	public void setUnique(Boolean unique) {
-		this.unique = unique;
-	}
 
 }
