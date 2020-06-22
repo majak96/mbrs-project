@@ -7,19 +7,13 @@ public class FMLinkedProperty extends FMProperty {
 	private String mappedBy;
 	private Boolean orphanRemoval;
 	private Boolean optional;
-
+	private Boolean navigable;
+	
+	private FMAssociation association;
+	
 	public FMLinkedProperty() {
 		super();
-	}
-
-	public FMLinkedProperty(FMType type, MethodPropertyAccessModifier accessModifier, Integer lower, Integer upper, CascadeType cascade, FetchType fetch, String mappedBy, Boolean orphanRemoval,
-			Boolean optional) {
-		super(type, accessModifier, lower, upper);
-		this.cascade = cascade;
-		this.fetch = fetch;
-		this.mappedBy = mappedBy;
-		this.orphanRemoval = orphanRemoval;
-		this.optional = optional;
+		this.navigable = true;
 	}
 
 	public CascadeType getCascade() {
@@ -60,6 +54,22 @@ public class FMLinkedProperty extends FMProperty {
 
 	public void setOptional(Boolean optional) {
 		this.optional = optional;
+	}
+
+	public Boolean getNavigable() {
+		return navigable;
+	}
+
+	public void setNavigable(Boolean navigable) {
+		this.navigable = navigable;
+	}
+
+	public FMAssociation getAssociation() {
+		return association;
+	}
+
+	public void setAssociation(FMAssociation association) {
+		this.association = association;
 	}
 
 }

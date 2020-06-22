@@ -11,22 +11,12 @@ public class FMPersistentProperty extends FMProperty {
 
 	public FMPersistentProperty() {
 		super();
+		this.id = false;
 	}
 
 	public FMPersistentProperty(String name, MethodPropertyAccessModifier modifier) {
 		super(name, modifier);
-	}
-
-
-	public FMPersistentProperty(String name, MethodPropertyAccessModifier modifier, Boolean id, String columnName,
-			Integer length, Integer precision, GeneratedValue generatedValue, Boolean unique) {
-		super(name, modifier);
-		this.id = id;
-		this.columnName = columnName;
-		this.length = length;
-		this.precision = precision;
-		this.generatedValue = generatedValue;
-		this.unique = unique;
+		this.id = false;
 	}
 
 	public Boolean getId() {
