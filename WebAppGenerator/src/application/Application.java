@@ -16,7 +16,7 @@ public class Application {
 		ProjectInfo projectInfo = ProjectInfo.getInstance();
 		projectInfo.setProjectName("example-project");
 		projectInfo.setProjectPackage("com.example");
-		projectInfo.setProjectPath("C:\\Users\\Marijana Kolosnjaji\\Desktop");
+		projectInfo.setProjectPath("C:\\Users\\Marijana\\Desktop\\MBRS gen");
 		projectInfo.setDatabaseUrl("jdbc:postgresql://localhost:5432/example-database");
 		projectInfo.setDatabaseUsername("postgres");
 		projectInfo.setDatabasePassword("root");

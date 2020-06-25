@@ -46,7 +46,11 @@ public class GeneratorRegistry {
 			basePath += File.separator + packageString;
 			GeneratorUtils.createDirectory(basePath);
 		}
-
+		GeneratorUtils.createDirectory(basePath + File.separator + "model");
+		GeneratorUtils.createDirectory(basePath + File.separator + "controllers");
+		GeneratorUtils.createDirectory(basePath + File.separator + "services");
+		GeneratorUtils.createDirectory(basePath + File.separator + "repositories");
+		
 		projectInfo.setBasePath(basePath);
 	}
 }

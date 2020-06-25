@@ -8,7 +8,8 @@ public class FMModel {
 	private static FMModel instance;
 
 	private List<FMEntity> entities = new ArrayList<FMEntity>();
-
+	private List<FMAssociation> associations = new ArrayList<FMAssociation>();
+	
 	private FMModel() {
 		// TODO Auto-generated constructor stub
 	}
@@ -27,6 +28,14 @@ public class FMModel {
 
 	public void setEntities(List<FMEntity> entities) {
 		this.entities = entities;
+	}
+
+	public List<FMAssociation> getAssociations() {
+		return associations;
+	}
+
+	public void setAssociations(List<FMAssociation> associations) {
+		this.associations = associations;
 	}
 
 }

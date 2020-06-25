@@ -1,6 +1,8 @@
 package utils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.xml.sax.Attributes;
@@ -11,6 +13,7 @@ import model.CascadeType;
 import model.FMAssociation;
 import model.FMEntity;
 import model.FMLinkedProperty;
+import model.FMModel;
 import model.FMPersistentProperty;
 import model.FMProperty;
 import model.FMType;
@@ -328,7 +331,6 @@ public class Handler extends DefaultHandler {
 	}
 
 	public void endDocument() throws SAXException {
-
 		// set linked property name and type
 		for (Map.Entry<String, String> entry : this.propertyTypesMap.entrySet()) {
 			if (this.entities.containsKey(entry.getValue()) && this.linkedProperties.containsKey(entry.getKey())) {
@@ -389,6 +391,14 @@ public class Handler extends DefaultHandler {
 				}
 			}
 		}
+		
+		FMModel model = FMModel.getInstance();
+		
+		List<FMEntity> entitiesList = new ArrayList<FMEntity>(entities.values());
+		List<FMAssociation> associationsList = new ArrayList<FMAssociation>(associations.values());
+
+		model.setEntities(entitiesList);
+		model.setAssociations(associationsList);
 
 		System.out.println("******************************************");
 
