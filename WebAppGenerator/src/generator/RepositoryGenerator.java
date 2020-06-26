@@ -60,7 +60,7 @@ public class RepositoryGenerator extends AbstractGenerator {
 
 			}
 
-			File file = new File(path + File.separatorChar + entityName + "Repostory.java");
+			File file = new File(path + File.separatorChar + entityName + "Repository.java");
 			
 			try {
 				file.createNewFile();

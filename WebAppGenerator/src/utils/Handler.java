@@ -50,7 +50,7 @@ public class Handler extends DefaultHandler {
 		defaultTypes.put("Entity", new FMType("Entity", "javax.persistence"));
 		defaultTypes.put("Column", new FMType("Column", "javax.persistence"));
 		defaultTypes.put("GeneratedValue", new FMType("GeneratedValue", "javax.persistence"));
-		defaultTypes.put("GeneratedType", new FMType("GeneratedType", "javax.persistence"));
+		defaultTypes.put("GeneratedType", new FMType("GenerationType", "javax.persistence"));
 		defaultTypes.put("CascadeType", new FMType("CascadeType", "javax.persistence"));
 		defaultTypes.put("FetchType", new FMType("FetchType", "javax.persistence"));
 		defaultTypes.put("Id", new FMType("Id", "javax.persistence"));
@@ -289,7 +289,7 @@ public class Handler extends DefaultHandler {
 
 					// add generated value and generated type to imported packages
 					baseEntity.addImportedPackage(defaultTypes.get("GeneratedValue"));
-					baseEntity.addImportedPackage(defaultTypes.get("GeneratedType"));
+					baseEntity.addImportedPackage(defaultTypes.get("GenerationType"));
 				}
 				
 				if (attributes.getValue("length") != null) {
