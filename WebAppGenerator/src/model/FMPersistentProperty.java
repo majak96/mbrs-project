@@ -5,6 +5,7 @@ public class FMPersistentProperty extends FMProperty {
 	private Boolean id;
 	private String columnName;
 	private Integer length;
+	private Integer scale;
 	private Integer precision;
 	private GeneratedValue generatedValue;
 	private Boolean unique;
@@ -65,6 +66,14 @@ public class FMPersistentProperty extends FMProperty {
 
 	public void setUnique(Boolean unique) {
 		this.unique = unique;
+	}
+
+	public Integer getScale() {
+		return scale;
+	}
+
+	public void setScale(Integer scale) {
+		this.scale = scale;
 	}
 
 }

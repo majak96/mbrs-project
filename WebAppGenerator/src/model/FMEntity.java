@@ -20,7 +20,9 @@ public class FMEntity extends FMType {
 	
 	private Boolean delete;
 
-	private List<FMProperty> properties = new ArrayList<FMProperty>();
+	private List<FMPersistentProperty> persistentProperties = new ArrayList<FMPersistentProperty>();
+	private List<FMLinkedProperty> linkedProperties = new ArrayList<FMLinkedProperty>();
+
 
 	private Set<FMType> importedPackages = new HashSet<FMType>();
 
@@ -28,36 +30,6 @@ public class FMEntity extends FMType {
 		super(name, typePackage);
 	}
 	
-	public FMEntity(String name, String typePackage, FMEntity ancestor, ClassAccessModifier accessModifier,
-			String tableName, Boolean create, Boolean update, Boolean delete, List<FMProperty> properties,
-			Set<FMType> importedPackages) {
-		super(name, typePackage);
-		this.ancestor = ancestor;
-		this.accessModifier = accessModifier;
-		this.tableName = tableName;
-		this.create = create;
-		this.update = update;
-		this.delete = delete;
-		this.properties = properties;
-		this.importedPackages = importedPackages;
-	}
-
-	public List<FMProperty> getProperties() {
-		return properties;
-	}
-
-	public Iterator<FMProperty> getPropertyIterator() {
-		return properties.iterator();
-	}
-
-	public void addProperty(FMProperty property) {
-		properties.add(property);
-	}
-
-	public int getPropertyCount() {
-		return properties.size();
-	}
-
 	public Set<FMType> getImportedPackages() {
 		return importedPackages;
 	}
@@ -71,7 +43,7 @@ public class FMEntity extends FMType {
 	}
 
 	public int getImportedCount() {
-		return properties.size();
+		return importedPackages.size();
 	}
 
 	public ClassAccessModifier getAccessModifier() {
@@ -122,11 +94,31 @@ public class FMEntity extends FMType {
 		this.delete = delete;
 	}
 
-	public void setProperties(List<FMProperty> properties) {
-		this.properties = properties;
+	public List<FMPersistentProperty> getPersistentProperties() {
+		return persistentProperties;
+	}
+
+	public void setPersistentProperties(List<FMPersistentProperty> persistentProperties) {
+		this.persistentProperties = persistentProperties;
+	}
+
+	public List<FMLinkedProperty> getLinkedProperties() {
+		return linkedProperties;
+	}
+
+	public void setLinkedProperties(List<FMLinkedProperty> linkedProperties) {
+		this.linkedProperties = linkedProperties;
 	}
 
 	public void setImportedPackages(Set<FMType> importedPackages) {
 		this.importedPackages = importedPackages;
+	}
+	
+	public void addLinkedProperties(FMLinkedProperty linkedProperty) {
+		linkedProperties.add(linkedProperty);
+	}
+	
+	public void addPersistentProperties(FMPersistentProperty persistentProperty) {
+		persistentProperties.add(persistentProperty);
 	}
 }

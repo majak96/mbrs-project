@@ -9,7 +9,7 @@ public class FMLinkedProperty extends FMProperty {
 	private Boolean optional;
 	private Boolean navigable;
 	
-	private FMAssociation association;
+	private FMLinkedProperty oppositeEnd;
 	
 	public FMLinkedProperty() {
 		super();
@@ -64,12 +64,12 @@ public class FMLinkedProperty extends FMProperty {
 		this.navigable = navigable;
 	}
 
-	public FMAssociation getAssociation() {
-		return association;
+	public FMLinkedProperty getOppositeEnd() {
+		return oppositeEnd;
 	}
 
-	public void setAssociation(FMAssociation association) {
-		this.association = association;
+	public void setOppositeEnd(FMLinkedProperty oppositeEnd) {
+		this.oppositeEnd = oppositeEnd;
 	}
 
 }

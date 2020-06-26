@@ -14,6 +14,7 @@ public class GeneratorRegistry {
 	public void registerGenerators() {
 		generators.add(new MainGenerator());
 		generators.add(new ApplicationYmlGenerator());
+		generators.add(new ModelGenerator());
 		generators.add(new RepositoryGenerator());
 		// TODO: add other generators
 	}
@@ -37,8 +38,10 @@ public class GeneratorRegistry {
 		GeneratorUtils.createDirectory(projectNamePath);
 		GeneratorUtils.createDirectory(projectNamePath + File.separator + "src");
 		GeneratorUtils.createDirectory(projectNamePath + File.separator + "src" + File.separator + "main");
-		GeneratorUtils.createDirectory(projectNamePath + File.separator + "src" + File.separator + "main" + File.separator + "resources");
-		GeneratorUtils.createDirectory(projectNamePath + File.separator + "src" + File.separator + "main" + File.separator + "java");
+		GeneratorUtils.createDirectory(
+				projectNamePath + File.separator + "src" + File.separator + "main" + File.separator + "resources");
+		GeneratorUtils.createDirectory(
+				projectNamePath + File.separator + "src" + File.separator + "main" + File.separator + "java");
 
 		String[] packageStrings = projectInfo.getProjectPackage().split("\\.");
 		String basePath = projectNamePath + File.separator + "src" + File.separator + "main" + File.separator + "java";
@@ -50,7 +53,7 @@ public class GeneratorRegistry {
 		GeneratorUtils.createDirectory(basePath + File.separator + "controllers");
 		GeneratorUtils.createDirectory(basePath + File.separator + "services");
 		GeneratorUtils.createDirectory(basePath + File.separator + "repositories");
-		
+
 		projectInfo.setBasePath(basePath);
 	}
 }

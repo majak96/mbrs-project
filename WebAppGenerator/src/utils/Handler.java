@@ -10,12 +10,12 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import model.CascadeType;
+import model.ClassAccessModifier;
 import model.FMAssociation;
 import model.FMEntity;
 import model.FMLinkedProperty;
 import model.FMModel;
 import model.FMPersistentProperty;
-import model.FMProperty;
 import model.FMType;
 import model.FetchType;
 import model.GeneratedValue;
@@ -41,15 +41,18 @@ public class Handler extends DefaultHandler {
 		// creating default types
 		defaultTypes.put("String", new FMType("String", ""));
 		defaultTypes.put("Integer", new FMType("Integer", ""));
-		defaultTypes.put("double", new FMType("double", ""));
-		defaultTypes.put("long", new FMType("long", ""));
-		defaultTypes.put("String", new FMType("float", ""));
+		defaultTypes.put("double", new FMType("Double", ""));
+		defaultTypes.put("float", new FMType("Float", ""));
+		defaultTypes.put("long", new FMType("Long", ""));
+		defaultTypes.put("String", new FMType("String", ""));
 		defaultTypes.put("date", new FMType("Date", "java.util"));
 		defaultTypes.put("Set", new FMType("Set", "java.util"));
 		defaultTypes.put("Entity", new FMType("Entity", "javax.persistence"));
 		defaultTypes.put("Column", new FMType("Column", "javax.persistence"));
 		defaultTypes.put("GeneratedValue", new FMType("GeneratedValue", "javax.persistence"));
 		defaultTypes.put("GeneratedType", new FMType("GeneratedType", "javax.persistence"));
+		defaultTypes.put("CascadeType", new FMType("CascadeType", "javax.persistence"));
+		defaultTypes.put("FetchType", new FMType("FetchType", "javax.persistence"));
 		defaultTypes.put("Id", new FMType("Id", "javax.persistence"));
 		defaultTypes.put("ManyToMany", new FMType("ManyToMany", "javax.persistence"));
 		defaultTypes.put("OneToMany", new FMType("OneToMany", "javax.persistence"));
@@ -66,10 +69,11 @@ public class Handler extends DefaultHandler {
 		case "packagedElement":
 			// save entity
 			if (attributes.getValue("xmi:type") != null && attributes.getValue("xmi:type").equals("uml:Class")) {
-				// TODO: decide what to do with class visibility
 				currentClass = attributes.getValue("xmi:id");
 				
-				FMEntity newEntity = new FMEntity(attributes.getValue("name"), ProjectInfo.getInstance().getProjectPackage());
+				FMEntity newEntity = new FMEntity(attributes.getValue("name"), ProjectInfo.getInstance().getProjectPackage()+".model");
+				// TODO: decide what to do with class visibility
+				newEntity.setAccessModifier(ClassAccessModifier.PUBLIC);
 				entities.put(attributes.getValue("xmi:id"), newEntity);
 			}
 			// save association
@@ -108,7 +112,7 @@ public class Handler extends DefaultHandler {
 					FMPersistentProperty newProperty = new FMPersistentProperty(attributes.getValue("name"), modifier);
 					
 					persistentProperties.put(currentProperty, newProperty);
-					entity.addProperty(newProperty);
+					entity.addPersistentProperties(newProperty);
 				} 
 				// save navigable linked property to entity
 				else if (attributes.getValue("association") != null) {
@@ -123,7 +127,7 @@ public class Handler extends DefaultHandler {
 					this.propertyTypesMap.put(currentProperty, attributes.getValue("type"));
 					
 					linkedProperties.put(currentProperty, property);
-					entity.addProperty(property);
+					entity.addLinkedProperties(property);
 				}
 			}
 			
@@ -153,7 +157,6 @@ public class Handler extends DefaultHandler {
 						
 					property.setAccessModifier(ownedEndModifier);
 					property.setNavigable(false);
-					property.setAssociation(association);
 					
 					linkedProperties.put(currentProperty, property);
 					
@@ -229,7 +232,6 @@ public class Handler extends DefaultHandler {
 						association.setSecondMemberEnd(memberEndProperty);
 					}
 					
-					memberEndProperty.setAssociation(association);
 				}			
 			}
 
@@ -262,8 +264,16 @@ public class Handler extends DefaultHandler {
 			String baseProperty = attributes.getValue("base_Property");
 
 			if (persistentProperties.containsKey(baseProperty)) {	
-				FMEntity baseEntity = entities.get(currentClass);
 				FMPersistentProperty persistentProperty = (FMPersistentProperty) persistentProperties.get(baseProperty);
+				
+				//find entity of the property
+				FMEntity baseEntity = null;
+				for(FMEntity entity : entities.values()) {
+					if(entity.getPersistentProperties().contains(persistentProperty)) {
+						baseEntity = entity;
+						break;
+					}
+				}
 				
 				// add column to imported packages
 				baseEntity.addImportedPackage(defaultTypes.get("Column"));
@@ -290,6 +300,10 @@ public class Handler extends DefaultHandler {
 					persistentProperty.setPrecision(Integer.parseInt(attributes.getValue("precision")));
 				}
 				
+				if (attributes.getValue("scale") != null) {
+					persistentProperty.setScale(Integer.parseInt(attributes.getValue("scale")));
+				}
+				
 				if (attributes.getValue("unique") != null) {
 					persistentProperty.setUnique(attributes.getValue("unique").equals("true"));
 				}
@@ -303,13 +317,24 @@ public class Handler extends DefaultHandler {
 			
 			if (this.linkedProperties.containsKey(baseProperty)) {
 				FMLinkedProperty linkedProperty = (FMLinkedProperty) this.linkedProperties.get(baseProperty);
+				
+				//find entity of the property
+				FMEntity baseEntity = null;
+				for(FMEntity entity : entities.values()) {
+					if(entity.getLinkedProperties().contains(linkedProperty)) {
+						baseEntity = entity;
+						break;
+					}
+				}
 
 				if (attributes.getValue("cascade") != null) {
 					linkedProperty.setCascade(CascadeType.valueOf(attributes.getValue("cascade")));
+					baseEntity.addImportedPackage(defaultTypes.get("CascadeType"));
 				}
 
 				if (attributes.getValue("fetch") != null) {
 					linkedProperty.setFetch(FetchType.valueOf(attributes.getValue("fetch")));
+					baseEntity.addImportedPackage(defaultTypes.get("FetchType"));
 				}
 
 				if (attributes.getValue("mappedBy") != null) {
@@ -348,6 +373,9 @@ public class Handler extends DefaultHandler {
 		// add association annotations to imported packages 
 		for (Map.Entry<String, FMAssociation> entry : associations.entrySet()) {
 			FMAssociation association = entry.getValue();
+			
+			association.getFirstMemberEnd().setOppositeEnd(association.getSecondMemberEnd());
+			association.getSecondMemberEnd().setOppositeEnd(association.getFirstMemberEnd());
 			
 			if(association.getFirstMemberEnd().getNavigable()) {
 				FMEntity secondMemberEntity = (FMEntity) association.getSecondMemberEnd().getType();
@@ -395,10 +423,7 @@ public class Handler extends DefaultHandler {
 		FMModel model = FMModel.getInstance();
 		
 		List<FMEntity> entitiesList = new ArrayList<FMEntity>(entities.values());
-		List<FMAssociation> associationsList = new ArrayList<FMAssociation>(associations.values());
-
 		model.setEntities(entitiesList);
-		model.setAssociations(associationsList);
 
 		System.out.println("******************************************");
 
@@ -407,31 +432,26 @@ public class Handler extends DefaultHandler {
 			System.out.println("tableName: " + entry.getValue().getTableName());
 			
 			System.out.println("PROPERTIES: ");
-			for (FMProperty fmp : entry.getValue().getProperties()) {
-				System.out.println("Property name: " + fmp.getName());
-				System.out.println("Property access modifier: " + fmp.getAccessModifier());
-				System.out.println("Property type name: " + fmp.getType().getName());
-				System.out.println("Property type package: " + fmp.getType().getTypePackage());
-				System.out.println("Property upper: " + fmp.getUpper());
-				System.out.println("Property lower: " + fmp.getLower());
+			for (FMPersistentProperty fmp : entry.getValue().getPersistentProperties()) {
 
-				if (fmp instanceof FMPersistentProperty) {
-					FMPersistentProperty persistentProperty = (FMPersistentProperty) fmp;
-					System.out.println("Property generated value: " + persistentProperty.getGeneratedValue());
-					System.out.println("Property id: " + persistentProperty.getId());
-					System.out.println("Property column name: " + persistentProperty.getColumnName());
-					System.out.println("Property len: " + persistentProperty.getLength());
-					System.out.println("Property precision: " + persistentProperty.getPrecision());
-					System.out.println("Property unique: " + persistentProperty.getUnique());
-				} else if (fmp instanceof FMLinkedProperty) {
-					FMLinkedProperty linkedProperty = (FMLinkedProperty) fmp;
-					System.out.println("Property cascade: " + linkedProperty.getCascade());
-					System.out.println("Property fetch: " + linkedProperty.getFetch());
-					System.out.println("Property mappedBy: " + linkedProperty.getMappedBy());
-					System.out.println("Property orphanRemoval: " + linkedProperty.getOrphanRemoval());
-					System.out.println("Property optional: " + linkedProperty.getOptional());
-				}
+				System.out.println("Property generated value: " + fmp.getGeneratedValue());
+				System.out.println("Property id: " + fmp.getId());
+				System.out.println("Property column name: " + fmp.getColumnName());
+				System.out.println("Property len: " + fmp.getLength());
+				System.out.println("Property precision: " + fmp.getPrecision());
+				System.out.println("Property unique: " + fmp.getUnique());
 				
+				System.out.println("******************************************");
+			}
+			
+			for(FMLinkedProperty fmp : entry.getValue().getLinkedProperties()) {
+				
+				System.out.println("Property cascade: " + fmp.getCascade());
+				System.out.println("Property fetch: " + fmp.getFetch());
+				System.out.println("Property mappedBy: " + fmp.getMappedBy());
+				System.out.println("Property orphanRemoval: " + fmp.getOrphanRemoval());
+				System.out.println("Property optional: " + fmp.getOptional());
+
 				System.out.println("******************************************");
 			}
 			
