@@ -10,7 +10,6 @@ import freemarker.template.TemplateException;
 import model.FMEntity;
 import model.FMModel;
 import model.FMPersistentProperty;
-import model.FMProperty;
 import utils.ProjectInfo;
 
 public class RepositoryGenerator extends AbstractGenerator {
@@ -52,19 +51,17 @@ public class RepositoryGenerator extends AbstractGenerator {
 			model.put("class_name", entityName);
 			model.put("package", entity.getTypePackage());
 
-			for (FMProperty property : entity.getProperties()) {
-				if (property instanceof FMPersistentProperty) {
-					FMPersistentProperty persistentPropery = (FMPersistentProperty) property;
-					if (persistentPropery.getId()) {
-						model.put("id_class", persistentPropery.getType().getName());
+			for (FMPersistentProperty property : entity.getPersistentProperties()) {
+					if (property.getId()) {
+						model.put("id_class", property.getType().getName());
 						break;
 					}
-				}
+				
 
 			}
 
 			File file = new File(path + File.separatorChar + entityName + "Repostory.java");
-			System.out.println(File.separatorChar);
+			
 			try {
 				file.createNewFile();
 

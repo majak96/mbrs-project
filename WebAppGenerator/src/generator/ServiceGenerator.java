@@ -15,7 +15,6 @@ import freemarker.template.TemplateException;
 import model.FMEntity;
 import model.FMModel;
 import model.FMPersistentProperty;
-import model.FMProperty;
 import utils.ProjectInfo;
 
 /**
@@ -27,8 +26,8 @@ public class ServiceGenerator extends AbstractGenerator {
 	@Override
 	public void init() {
 		// TODO Auto-generated method stub
-		model.put("project_name", projectInfo.getProjectName());
-		model.put("project_package", projectInfo.getProjectPackage());
+		this.model.put("project_name", projectInfo.getProjectName());
+		this.model.put("project_package", projectInfo.getProjectPackage());
 	}
 
 	@Override
@@ -57,26 +56,21 @@ public class ServiceGenerator extends AbstractGenerator {
 		for (FMEntity entity : FMModel.getInstance().getEntities()) {
 
 			String entityName = entity.getName().substring(0, 1).toUpperCase() + entity.getName().substring(1);
-			List<String> properties = (entity.getProperties()).stream().map(p -> p.getName())
-					.collect(Collectors.toList());
+			List<String> properties = (entity.getPersistentProperties()).stream().map(p -> p.getName()).collect(Collectors.toList());
+			List<String> linkedPr = (entity.getLinkedProperties()).stream().map(p -> p.getName()).collect(Collectors.toList());
+			properties.addAll(linkedPr);
 			this.model.put("class_name", entityName);
 			this.model.put("package", entity.getTypePackage());
-
 			this.model.put("properties", properties);
 
-			for (FMProperty property : entity.getProperties()) {
-				if (property instanceof FMPersistentProperty) {
-					FMPersistentProperty persistentPropery = (FMPersistentProperty) property;
-					if (persistentPropery.getId()) {
-						this.model.put("id_class", persistentPropery.getType().getName());
-						break;
-					}
+			for (FMPersistentProperty property : entity.getPersistentProperties()) {
+				if (property.getId()) {
+					model.put("id_class", property.getType().getName());
+					break;
 				}
-
 			}
-
+			
 			File file = new File(path + File.separatorChar + entityName + "Service.java");
-			System.out.println(path + File.separatorChar + entityName + "Service.java");
 			try {
 				file.createNewFile();
 
