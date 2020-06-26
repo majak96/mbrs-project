@@ -38,7 +38,6 @@ public class ControllerGenerator extends AbstractGenerator {
 			controllerPath += "\\controllers";
 
 			for (FMEntity entity : entities) {
-				System.out.println(controllerPath);
 
 				model.put("class_name", entity.getName());
 				model.put("package", entity.getTypePackage());
