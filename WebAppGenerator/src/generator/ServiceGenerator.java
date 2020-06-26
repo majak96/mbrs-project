@@ -1,9 +1,14 @@
+/**
+ * 
+ */
 package generator;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -13,14 +18,17 @@ import model.FMPersistentProperty;
 import model.FMProperty;
 import utils.ProjectInfo;
 
-public class RepositoryGenerator extends AbstractGenerator {
+/**
+ * @author Vesna Milic
+ *
+ */
+public class ServiceGenerator extends AbstractGenerator {
 
 	@Override
 	public void init() {
 		// TODO Auto-generated method stub
 		model.put("project_name", projectInfo.getProjectName());
 		model.put("project_package", projectInfo.getProjectPackage());
-
 	}
 
 	@Override
@@ -30,7 +38,7 @@ public class RepositoryGenerator extends AbstractGenerator {
 		Template template = null;
 
 		try {
-			template = generatorInfo.getConfiguration().getTemplate("repository.ftl");
+			template = generatorInfo.getConfiguration().getTemplate("service.ftl");
 		} catch (Exception e) {
 			e.printStackTrace();
 			return;
@@ -44,27 +52,31 @@ public class RepositoryGenerator extends AbstractGenerator {
 		for (String packageString : packageStrings) {
 			path += File.separatorChar + packageString;
 		}
-		path += File.separatorChar + "repositories";
+		path += File.separatorChar + "services";
 
 		for (FMEntity entity : FMModel.getInstance().getEntities()) {
 
 			String entityName = entity.getName().substring(0, 1).toUpperCase() + entity.getName().substring(1);
-			model.put("class_name", entityName);
-			model.put("package", entity.getTypePackage());
+			List<String> properties = (entity.getProperties()).stream().map(p -> p.getName())
+					.collect(Collectors.toList());
+			this.model.put("class_name", entityName);
+			this.model.put("package", entity.getTypePackage());
+
+			this.model.put("properties", properties);
 
 			for (FMProperty property : entity.getProperties()) {
 				if (property instanceof FMPersistentProperty) {
 					FMPersistentProperty persistentPropery = (FMPersistentProperty) property;
 					if (persistentPropery.getId()) {
-						model.put("id_class", persistentPropery.getType().getName());
+						this.model.put("id_class", persistentPropery.getType().getName());
 						break;
 					}
 				}
 
 			}
 
-			File file = new File(path + File.separatorChar + entityName + "Repostory.java");
-			System.out.println(File.separatorChar);
+			File file = new File(path + File.separatorChar + entityName + "Service.java");
+			System.out.println(path + File.separatorChar + entityName + "Service.java");
 			try {
 				file.createNewFile();
 
