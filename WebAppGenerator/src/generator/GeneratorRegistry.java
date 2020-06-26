@@ -16,6 +16,10 @@ public class GeneratorRegistry {
 		generators.add(new ApplicationYmlGenerator());
 		generators.add(new ModelGenerator());
 		generators.add(new RepositoryGenerator());
+		generators.add(new PomXmlGenerator());
+		generators.add(new ControllerGenerator());
+		generators.add(new ServiceGenerator());
+
 		// TODO: add other generators
 	}
 
