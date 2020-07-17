@@ -2,9 +2,13 @@ package application;
 
 import java.io.File;
 
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import de.javasoft.plaf.synthetica.SyntheticaPlainLookAndFeel;
 import generator.GeneratorRegistry;
 import utils.Handler;
 import utils.ProjectInfo;
@@ -12,15 +16,23 @@ import utils.ProjectInfo;
 public class Application {
 
 	public static void main(String[] args) {
+		
+		try {
+			UIManager.setLookAndFeel(new SyntheticaPlainLookAndFeel());
+			SwingUtilities.updateComponentTreeUI(new JFrame());
+			UIManager.put("Synthetica.tabbedPane.keepOpacity", true);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		ProjectInfo.getInstance().getMainFrame().setVisible(true);
 
+		
+
+	}
+	
+	public static void generate() {
 		ProjectInfo projectInfo = ProjectInfo.getInstance();
-		projectInfo.setProjectName("example-project");
-		projectInfo.setProjectPackage("com.example");
-		projectInfo.setProjectPath("C:\\Users\\Marijana\\Desktop\\MBRS gen");
-		projectInfo.setDatabaseUrl("jdbc:postgresql://localhost:5432/example-database");
-		projectInfo.setDatabaseUsername("postgres");
-		projectInfo.setDatabasePassword("root");
-
 		String[] nameStrings = projectInfo.getProjectName().replace("-", " ").replace("_", " ").split(" ");
 
 		StringBuilder pascalCaseBuilder = new StringBuilder();
@@ -34,7 +46,7 @@ public class Application {
 		projectInfo.setApplicationName(pascalCaseBuilder.toString() + "Application");
 		
 		try {
-			File inputFile = new File("resources/example.xml");
+			File inputFile = projectInfo.getResourceFile();
 			SAXParserFactory factory = SAXParserFactory.newInstance();
 			SAXParser saxParser = factory.newSAXParser();
 			Handler handler = new Handler();
@@ -46,7 +58,6 @@ public class Application {
 		GeneratorRegistry generatorRegistry = new GeneratorRegistry();
 		generatorRegistry.registerGenerators();
 		generatorRegistry.generate();
-
 	}
 
 }
