@@ -1,94 +1,65 @@
-/**
- * 
- */
 package generator;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import model.FMEntity;
 import model.FMModel;
-import model.FMPersistentProperty;
+import utils.GeneratorUtils;
 import utils.ProjectInfo;
 
-/**
- * @author Vesna Milic
- *
- */
 public class ServiceGenerator extends AbstractGenerator {
 
 	@Override
 	public void init() {
-		// TODO Auto-generated method stub
-		this.model.put("project_name", projectInfo.getProjectName());
 		this.model.put("project_package", projectInfo.getProjectPackage());
 	}
 
 	@Override
 	public void generate() {
-		// TODO Auto-generated method stub
+		String servicePath = ProjectInfo.getInstance().getBaseHandwrittenFilesPath() + File.separator + "services";
+		if (Files.notExists(Paths.get(servicePath))) {
+			GeneratorUtils.createDirectory(servicePath);
 
-		Template template = null;
+			Template template = null;
 
-		try {
-			template = generatorInfo.getConfiguration().getTemplate("service.ftl");
-		} catch (Exception e) {
-			e.printStackTrace();
-			return;
-		}
+			try {
+				template = generatorInfo.getConfiguration().getTemplate("service.ftl");
+			} catch (Exception e) {
+				e.printStackTrace();
+				return;
+			}
 
-		String path = ProjectInfo.getInstance().getProjectPath() + File.separatorChar
-				+ ProjectInfo.getInstance().getProjectName() + "\\src\\main\\java\\";
+			for (FMEntity entity : FMModel.getInstance().getEntities()) {
 
-		String[] packageStrings = projectInfo.getProjectPackage().split("\\.");
+				String entityName = entity.getName().substring(0, 1).toUpperCase() + entity.getName().substring(1);
+				this.model.put("class_name", entityName);
 
-		for (String packageString : packageStrings) {
-			path += File.separatorChar + packageString;
-		}
-		path += File.separatorChar + "services";
+				File file = new File(servicePath + File.separatorChar + entityName + "Service.java");
+				try {
+					file.createNewFile();
 
-		for (FMEntity entity : FMModel.getInstance().getEntities()) {
+					Writer fileWriter = new FileWriter(file);
 
-			String entityName = entity.getName().substring(0, 1).toUpperCase() + entity.getName().substring(1);
-			List<String> properties = (entity.getPersistentProperties()).stream().map(p -> p.getName()).collect(Collectors.toList());
-			List<String> linkedPr = (entity.getLinkedProperties()).stream().map(p -> p.getName()).collect(Collectors.toList());
-			properties.addAll(linkedPr);
-			this.model.put("class_name", entityName);
-			this.model.put("package", entity.getTypePackage());
-			this.model.put("properties", properties);
+					template.process(model, fileWriter);
 
-			for (FMPersistentProperty property : entity.getPersistentProperties()) {
-				if (property.getId()) {
-					model.put("id_class", property.getType().getName());
-					break;
+					fileWriter.flush();
+					fileWriter.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (TemplateException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 			}
-			
-			File file = new File(path + File.separatorChar + entityName + "Service.java");
-			try {
-				file.createNewFile();
-
-				Writer fileWriter = new FileWriter(file);
-
-				template.process(model, fileWriter);
-
-				fileWriter.flush();
-				fileWriter.close();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (TemplateException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		}
-
 	}
 
 }

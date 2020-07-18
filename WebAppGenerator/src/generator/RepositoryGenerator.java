@@ -4,82 +4,74 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import model.FMEntity;
 import model.FMModel;
 import model.FMPersistentProperty;
+import utils.GeneratorUtils;
 import utils.ProjectInfo;
 
 public class RepositoryGenerator extends AbstractGenerator {
 
 	@Override
 	public void init() {
-		// TODO Auto-generated method stub
-		model.put("project_name", projectInfo.getProjectName());
 		model.put("project_package", projectInfo.getProjectPackage());
-
 	}
 
 	@Override
 	public void generate() {
-		// TODO Auto-generated method stub
+		String repositoryPath = ProjectInfo.getInstance().getBaseHandwrittenFilesPath() + File.separator
+				+ "repositories";
+		if (Files.notExists(Paths.get(repositoryPath))) {
+			GeneratorUtils.createDirectory(repositoryPath);
 
-		Template template = null;
+			Template template = null;
 
-		try {
-			template = generatorInfo.getConfiguration().getTemplate("repository.ftl");
-		} catch (Exception e) {
-			e.printStackTrace();
-			return;
-		}
+			try {
+				template = generatorInfo.getConfiguration().getTemplate("repository.ftl");
+			} catch (Exception e) {
+				e.printStackTrace();
+				return;
+			}
 
-		String path = ProjectInfo.getInstance().getProjectPath() + File.separatorChar
-				+ ProjectInfo.getInstance().getProjectName() + "\\src\\main\\java\\";
+			for (FMEntity entity : FMModel.getInstance().getEntities()) {
 
-		String[] packageStrings = projectInfo.getProjectPackage().split("\\.");
+				String entityName = entity.getName().substring(0, 1).toUpperCase() + entity.getName().substring(1);
+				model.put("class_name", entityName);
+				model.put("package", entity.getTypePackage());
 
-		for (String packageString : packageStrings) {
-			path += File.separatorChar + packageString;
-		}
-		path += File.separatorChar + "repositories";
-
-		for (FMEntity entity : FMModel.getInstance().getEntities()) {
-
-			String entityName = entity.getName().substring(0, 1).toUpperCase() + entity.getName().substring(1);
-			model.put("class_name", entityName);
-			model.put("package", entity.getTypePackage());
-
-			for (FMPersistentProperty property : entity.getPersistentProperties()) {
+				for (FMPersistentProperty property : entity.getPersistentProperties()) {
 					if (property.getId()) {
 						model.put("id_class", property.getType().getName());
 						break;
 					}
-				
 
-			}
+				}
 
-			File file = new File(path + File.separatorChar + entityName + "Repository.java");
-			
-			try {
-				file.createNewFile();
+				File file = new File(repositoryPath + File.separatorChar + entityName + "Repository.java");
 
-				Writer fileWriter = new FileWriter(file);
+				try {
+					file.createNewFile();
 
-				template.process(model, fileWriter);
+					Writer fileWriter = new FileWriter(file);
 
-				fileWriter.flush();
-				fileWriter.close();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (TemplateException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+					template.process(model, fileWriter);
+
+					fileWriter.flush();
+					fileWriter.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (TemplateException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}
-
 	}
 
 }

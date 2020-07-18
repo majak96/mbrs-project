@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+[${.now}]
+This file was generated based on the template "${.current_template_name}".
+Changes to this file may cause incorrect behavior and will be lost if the code is regenerated.
+-->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -75,7 +80,33 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+			<plugin>
+			    <groupId>org.codehaus.mojo</groupId>
+			    <artifactId>build-helper-maven-plugin</artifactId>
+			    <version>3.0.0</version>
+			    <executions>
+			        <execution>
+			            <phase>generate-sources</phase>
+			            <goals>
+			                <goal>add-source</goal>
+			            </goals>
+			            <configuration>
+			                <sources>
+			                    <source>src-gen/main/java</source>
+			                </sources>
+			            </configuration>
+			        </execution>
+			    </executions>
+			</plugin>
 		</plugins>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+			</resource>
+			<resource>
+				<directory>src-gen/main/resources</directory>
+			</resource>
+		</resources>
 	</build>
 
 </project>

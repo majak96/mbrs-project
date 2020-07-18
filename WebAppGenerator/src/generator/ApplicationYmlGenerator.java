@@ -11,7 +11,6 @@ public class ApplicationYmlGenerator extends AbstractGenerator {
 
 	@Override
 	public void init() {
-
 		model.put("project_name", projectInfo.getProjectName());
 		model.put("database_url", projectInfo.getDatabaseUrl());
 		model.put("database_username", projectInfo.getDatabaseUsername());
@@ -20,13 +19,13 @@ public class ApplicationYmlGenerator extends AbstractGenerator {
 
 	@Override
 	public void generate() {
-
 		try {
 			Template temp = generatorInfo.getConfiguration().getTemplate("application_yml.ftl");
 
-			String propertiesPath = ProjectInfo.getInstance().getProjectPath() + "//"
-					+ ProjectInfo.getInstance().getProjectName() + "//src//main//resources";
-			File file = new File(propertiesPath + "//application.yml");
+			String propertiesPath = ProjectInfo.getInstance().getProjectPath() + File.separatorChar
+					+ ProjectInfo.getInstance().getProjectName() + File.separatorChar + "src-gen" + File.separatorChar
+					+ "main" + File.separatorChar + "resources";
+			File file = new File(propertiesPath + File.separatorChar + "application.yml");
 			file.createNewFile();
 
 			Writer fileWriter = new FileWriter(file);
@@ -39,7 +38,5 @@ public class ApplicationYmlGenerator extends AbstractGenerator {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 	}
-
 }

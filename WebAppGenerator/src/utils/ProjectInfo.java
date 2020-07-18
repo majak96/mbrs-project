@@ -9,7 +9,8 @@ public class ProjectInfo {
 	private String projectPackage;
 
 	private String applicationName;
-	private String basePath;
+	private String baseHandwrittenFilesPath;
+	private String baseGeneratedFilesPath;
 
 	private String applicationPort;
 
@@ -85,12 +86,12 @@ public class ProjectInfo {
 		this.databasePassword = databasePassword;
 	}
 
-	public String getBasePath() {
-		return basePath;
+	public String getBaseHandwrittenFilesPath() {
+		return baseHandwrittenFilesPath;
 	}
 
-	public void setBasePath(String basePath) {
-		this.basePath = basePath;
+	public void setBaseHandwrittenFilesPath(String basePath) {
+		this.baseHandwrittenFilesPath = basePath;
 	}
 
 	public String getApplicationName() {
@@ -99,6 +100,14 @@ public class ProjectInfo {
 
 	public void setApplicationName(String applicationName) {
 		this.applicationName = applicationName;
+	}
+
+	public String getBaseGeneratedFilesPath() {
+		return baseGeneratedFilesPath;
+	}
+
+	public void setBaseGeneratedFilesPath(String baseGeneratedFilesPath) {
+		this.baseGeneratedFilesPath = baseGeneratedFilesPath;
 	}
 
 }

@@ -8,10 +8,8 @@ public class GeneratorUtils {
 		File file = new File(name);
 
 		if (!file.exists()) {
-
 			try {
 				file.mkdir();
-
 			} catch (SecurityException se) {
 				throw se;
 			}

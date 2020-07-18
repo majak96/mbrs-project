@@ -58,6 +58,7 @@ public class Handler extends DefaultHandler {
 		defaultTypes.put("OneToMany", new FMType("OneToMany", "javax.persistence"));
 		defaultTypes.put("ManyToOne", new FMType("ManyToOne", "javax.persistence"));
 		defaultTypes.put("OneToOne", new FMType("OneToOne", "javax.persistence"));
+		defaultTypes.put("MappedSuperclass", new FMType("MappedSuperclass", "javax.persistence"));
 		defaultTypes.put("Table", new FMType("Table", "javax.persistence"));
 
 	}
@@ -247,13 +248,12 @@ public class Handler extends DefaultHandler {
 				// check if table name exists
 				if (attributes.getValue("tableName") != null) {
 					baseEntity.setTableName(attributes.getValue("tableName"));
-
-					// add table to imported packages
+					
 					baseEntity.addImportedPackage(defaultTypes.get("Table"));
 				}
 
 				// add entity and id to imported packages
-				baseEntity.addImportedPackage(defaultTypes.get("Entity"));
+				baseEntity.addImportedPackage(defaultTypes.get("MappedSuperclass"));
 				baseEntity.addImportedPackage(defaultTypes.get("Id"));
 			}
 			

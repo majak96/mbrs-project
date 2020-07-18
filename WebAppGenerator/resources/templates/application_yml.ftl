@@ -1,3 +1,7 @@
+# [${.now}]
+# This file was generated based on the template "${.current_template_name}".
+# Changes to this file may cause incorrect behavior and will be lost if the code is regenerated.
+
 spring:
   application:
     name: ${project_name}

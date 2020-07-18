@@ -14,13 +14,16 @@ public class GeneratorRegistry {
 	public void registerGenerators() {
 		generators.add(new MainGenerator());
 		generators.add(new ApplicationYmlGenerator());
+		generators.add(new ApplicationPropertiesGenerator());
+		generators.add(new ModelBaseGenerator());
 		generators.add(new ModelGenerator());
+		generators.add(new RepositoryBaseGenerator());
 		generators.add(new RepositoryGenerator());
 		generators.add(new PomXmlGenerator());
+		generators.add(new ControllerBaseGenerator());
 		generators.add(new ControllerGenerator());
+		generators.add(new ServiceBaseGenerator());
 		generators.add(new ServiceGenerator());
-
-		// TODO: add other generators
 	}
 
 	public void generate() {
@@ -36,10 +39,33 @@ public class GeneratorRegistry {
 
 	private void createProjectStructure() {
 		ProjectInfo projectInfo = ProjectInfo.getInstance();
-
 		String projectNamePath = projectInfo.getProjectPath() + File.separator + projectInfo.getProjectName();
 
 		GeneratorUtils.createDirectory(projectNamePath);
+
+		// create the project structure for generated files
+		GeneratorUtils.createDirectory(projectNamePath + File.separator + "src-gen");
+		GeneratorUtils.createDirectory(projectNamePath + File.separator + "src-gen" + File.separator + "main");
+		GeneratorUtils.createDirectory(
+				projectNamePath + File.separator + "src-gen" + File.separator + "main" + File.separator + "resources");
+		GeneratorUtils.createDirectory(
+				projectNamePath + File.separator + "src-gen" + File.separator + "main" + File.separator + "java");
+
+		String[] packageGenStrings = projectInfo.getProjectPackage().split("\\.");
+		String baseGenPath = projectNamePath + File.separator + "src-gen" + File.separator + "main" + File.separator
+				+ "java";
+		for (String packageString : packageGenStrings) {
+			baseGenPath += File.separator + packageString;
+			GeneratorUtils.createDirectory(baseGenPath);
+		}
+		GeneratorUtils.createDirectory(baseGenPath + File.separator + "model");
+		GeneratorUtils.createDirectory(baseGenPath + File.separator + "controllers");
+		GeneratorUtils.createDirectory(baseGenPath + File.separator + "services");
+		GeneratorUtils.createDirectory(baseGenPath + File.separator + "repositories");
+
+		projectInfo.setBaseGeneratedFilesPath(baseGenPath);
+
+		// create the project structure for handwritten files
 		GeneratorUtils.createDirectory(projectNamePath + File.separator + "src");
 		GeneratorUtils.createDirectory(projectNamePath + File.separator + "src" + File.separator + "main");
 		GeneratorUtils.createDirectory(
@@ -53,11 +79,7 @@ public class GeneratorRegistry {
 			basePath += File.separator + packageString;
 			GeneratorUtils.createDirectory(basePath);
 		}
-		GeneratorUtils.createDirectory(basePath + File.separator + "model");
-		GeneratorUtils.createDirectory(basePath + File.separator + "controllers");
-		GeneratorUtils.createDirectory(basePath + File.separator + "services");
-		GeneratorUtils.createDirectory(basePath + File.separator + "repositories");
 
-		projectInfo.setBasePath(basePath);
+		projectInfo.setBaseHandwrittenFilesPath(basePath);
 	}
 }
