@@ -103,7 +103,7 @@ public class MainFrame extends JFrame {
 					projectInfo.setProjectPath(projectPathField);
 					projectInfo.setDatabaseUrl(databaseUrlField.getText().trim());
 					projectInfo.setDatabaseUsername(databaseUsernameField.getText().trim());
-					projectInfo.setDatabasePassword(databasePasswordField.getPassword().toString());
+					projectInfo.setDatabasePassword(new String(databasePasswordField.getPassword()));
 					projectInfo.setResourceFile(resourceFilePath);
 					Application.generate();
 				}
