@@ -21,6 +21,7 @@ import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
@@ -42,6 +43,9 @@ public class MainFrame extends JFrame {
 	private JTextField applicationPortField;
 	private JTextField databaseUrlField;
 	private JTextField databaseUsernameField;
+	
+	private JTextField projectPathFieldSelected;
+	private JTextField resourceFilePathField;
 	private JPasswordField databasePasswordField;
 	private List<JComponent> comp;
 
@@ -106,6 +110,8 @@ public class MainFrame extends JFrame {
 					projectInfo.setDatabasePassword(new String(databasePasswordField.getPassword()));
 					projectInfo.setResourceFile(resourceFilePath);
 					Application.generate();
+					JOptionPane.showMessageDialog(MainFrame.this,
+						    "Generation completed");
 				}
 			}
 		});
@@ -131,6 +137,8 @@ public class MainFrame extends JFrame {
 				databaseUsernameField.setText("postgres");
 				databasePasswordField.setText("root");
 				resourceFilePath = new File("resources/example.xml");
+				resourceFilePathField.setText("resources/example.xml");
+				projectPathFieldSelected.setText("C:\\Users\\Marijana\\Desktop\\MBRS gen");
 			}
 		});
 
@@ -189,8 +197,14 @@ public class MainFrame extends JFrame {
 		JLabel projectPackageLabel = new JLabel("Package");
 		projectNameField = new JTextField();
 		projectPackageField = new JTextField();
-		JButton button = new JButton("...");
-		button.addActionListener(new ActionListener() {
+		projectPathFieldSelected = new JTextField();
+		resourceFilePathField = new JTextField();
+		
+		projectPathFieldSelected.setEditable(false);
+		resourceFilePathField.setEditable(false);
+		
+		JButton selectProjectPathButton = new JButton("...");
+		selectProjectPathButton.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -203,6 +217,8 @@ public class MainFrame extends JFrame {
 					System.out.println("getCurrentDirectory(): " + projectPathChooser.getCurrentDirectory());
 					System.out.println("getSelectedFile() : " + projectPathChooser.getSelectedFile());
 					projectPathField = projectPathChooser.getSelectedFile().toString();
+					projectPathFieldSelected.setText(projectPathChooser.getSelectedFile().toString());
+					
 				} else {
 					System.out.println("No Selection ");
 				}
@@ -217,7 +233,7 @@ public class MainFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				JFileChooser projectPathChooser = new JFileChooser();
 				projectPathChooser.setCurrentDirectory(new java.io.File("."));
-				projectPathChooser.setDialogTitle("Choose project path");
+				projectPathChooser.setDialogTitle("Choose resource file");
 				projectPathChooser.addChoosableFileFilter(new FileNameExtensionFilter("XML Files", "xml"));
 				projectPathChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 				projectPathChooser.setAcceptAllFileFilterUsed(false);
@@ -225,6 +241,7 @@ public class MainFrame extends JFrame {
 					System.out.println("getCurrentDirectory(): " + projectPathChooser.getCurrentDirectory());
 					System.out.println("getSelectedFile() : " + projectPathChooser.getSelectedFile());
 					resourceFilePath = projectPathChooser.getSelectedFile();
+					resourceFilePathField.setText(projectPathChooser.getSelectedFile().toString());
 				} else {
 					System.out.println("No Selection ");
 				}
@@ -235,10 +252,14 @@ public class MainFrame extends JFrame {
 		pathPanel.setLayout(new BoxLayout(pathPanel, BoxLayout.X_AXIS));
 		pathPanel.add(projectPathLabel);
 		pathPanel.add(Box.createHorizontalStrut(5));
-		pathPanel.add(button);
+		pathPanel.add(projectPathFieldSelected);
+		pathPanel.add(Box.createHorizontalStrut(5));
+		pathPanel.add(selectProjectPathButton);
 
 		pathResourcePanel.setLayout(new BoxLayout(pathResourcePanel, BoxLayout.X_AXIS));
 		pathResourcePanel.add(resourcePathLabel);
+		pathResourcePanel.add(Box.createHorizontalStrut(5));
+		pathResourcePanel.add(resourceFilePathField);
 		pathResourcePanel.add(Box.createHorizontalStrut(5));
 		pathResourcePanel.add(button1);
 
