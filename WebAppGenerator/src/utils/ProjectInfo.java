@@ -1,8 +1,14 @@
 package utils;
 
+import java.io.File;
+
+import ui.MainFrame;
+
 public class ProjectInfo {
 
 	private static ProjectInfo projectInfo;
+	
+	private MainFrame mainFrame;
 
 	private String projectPath;
 	private String projectName;
@@ -17,9 +23,11 @@ public class ProjectInfo {
 	private String databaseUrl;
 	private String databaseUsername;
 	private String databasePassword;
+	
+	private File resourceFile;
 
 	private ProjectInfo() {
-
+		mainFrame = new MainFrame();
 	}
 
 	public static ProjectInfo getInstance() {
@@ -108,6 +116,22 @@ public class ProjectInfo {
 
 	public void setBaseGeneratedFilesPath(String baseGeneratedFilesPath) {
 		this.baseGeneratedFilesPath = baseGeneratedFilesPath;
+	}
+	
+	public File getResourceFile() {
+		return resourceFile;
+	}
+
+	public void setResourceFile(File resourceFile) {
+		this.resourceFile = resourceFile;
+	}
+
+	public MainFrame getMainFrame() {
+		return mainFrame;
+	}
+
+	public void setMainFrame(MainFrame mainFrame) {
+		this.mainFrame = mainFrame;
 	}
 
 }
