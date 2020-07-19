@@ -9,7 +9,11 @@ public class FMProperty extends FMNamedElement {
 	private Integer lower;
 
 	private Integer upper;
-
+	
+	private ComponentType componentType;
+	
+	private String label;
+	
 
 	public FMProperty() {
 
@@ -58,6 +62,22 @@ public class FMProperty extends FMNamedElement {
 
 	public void setUpper(Integer upper) {
 		this.upper = upper;
+	}
+
+	public ComponentType getComponentType() {
+		return componentType;
+	}
+
+	public void setComponentType(ComponentType componentType) {
+		this.componentType = componentType;
+	}
+
+	public String getLabel() {
+		return label;
+	}
+
+	public void setLabel(String label) {
+		this.label = label;
 	}
 
 

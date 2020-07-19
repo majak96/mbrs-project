@@ -14,6 +14,8 @@ public class FMEntity extends FMType {
 	
 	private String tableName;
 	
+	private String label;
+	
 	private Boolean create;
 	
 	private Boolean update;
@@ -120,5 +122,13 @@ public class FMEntity extends FMType {
 	
 	public void addPersistentProperties(FMPersistentProperty persistentProperty) {
 		persistentProperties.add(persistentProperty);
+	}
+
+	public String getLabel() {
+		return label;
+	}
+
+	public void setLabel(String label) {
+		this.label = label;
 	}
 }

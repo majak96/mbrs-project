@@ -9,6 +9,9 @@ public class FMPersistentProperty extends FMProperty {
 	private Integer precision;
 	private GeneratedValue generatedValue;
 	private Boolean unique;
+	private Boolean editable;
+	private Boolean readOnly;
+	private Boolean lookUpProperty;
 
 	public FMPersistentProperty() {
 		super();
@@ -74,6 +77,30 @@ public class FMPersistentProperty extends FMProperty {
 
 	public void setScale(Integer scale) {
 		this.scale = scale;
+	}
+
+	public Boolean getEditable() {
+		return editable;
+	}
+
+	public void setEditable(Boolean editable) {
+		this.editable = editable;
+	}
+
+	public Boolean getReadOnly() {
+		return readOnly;
+	}
+
+	public void setReadOnly(Boolean readOnly) {
+		this.readOnly = readOnly;
+	}
+
+	public Boolean getLookUpProperty() {
+		return lookUpProperty;
+	}
+
+	public void setLookUpProperty(Boolean lookUpProperty) {
+		this.lookUpProperty = lookUpProperty;
 	}
 
 }

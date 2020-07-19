@@ -8,6 +8,8 @@ public class FMLinkedProperty extends FMProperty {
 	private Boolean orphanRemoval;
 	private Boolean optional;
 	private Boolean navigable;
+	private Boolean zoom;
+	private Boolean next;
 	
 	private FMLinkedProperty oppositeEnd;
 	
@@ -70,6 +72,22 @@ public class FMLinkedProperty extends FMProperty {
 
 	public void setOppositeEnd(FMLinkedProperty oppositeEnd) {
 		this.oppositeEnd = oppositeEnd;
+	}
+
+	public Boolean getZoom() {
+		return zoom;
+	}
+
+	public void setZoom(Boolean zoom) {
+		this.zoom = zoom;
+	}
+
+	public Boolean getNext() {
+		return next;
+	}
+
+	public void setNext(Boolean next) {
+		this.next = next;
 	}
 
 }
