@@ -24,7 +24,7 @@ function showMedicines() {
 				str += '<td> ' + data[i].price + '</td> ';
 				str += '<td> ' + data[i].availableAmount + '</td> ';
                 str += '<td> <a href="#" title="Pharmacies" class="pharmacies" name="' + data[i].id + '" id="pharmacies' + data[i].id + '" ><i class="fas fa-external-link-alt" name="' + data[i].id + '"></i></a>';
-                str += '<td> <a href="file:///C:/Users/Marijana/Desktop/jquery%20example/medicineForm.html?id=' + data[i].id + '" title="Edit" ><i class="fas fa-edit"></i></a>';
+                str += '<td> <a href="./medicineForm.html?id=' + data[i].id + '" title="Edit" ><i class="fas fa-edit"></i></a>';
                 str += ' &nbsp; <a href="#" title="Delete" class="deleteMedicine" name="' + data[i].id + '" id="deleteMedicine' + data[i].id + '"><i class="fas fa-trash-alt" name="' + data[i].id + '"></i></a> </td> </tr>';
                 $("#medicineTbodyId").append(str);
 			}
@@ -49,7 +49,7 @@ function showMedicines() {
 
 function showPharmacy(id) {
 	$('#medicinePharmacyModal').modal('show');
-	$('#pharmacySelect').empty();
+	$('#pharmacyTbody').empty();
 	$.ajax({
 		url: 'http://localhost:8080/medicine/' + id,
 		type: 'GET',
@@ -57,9 +57,10 @@ function showPharmacy(id) {
 		success: function (data) {
 			str ="";
 			for (i in data.pharmacy) {
-				str += '<option value="'+ data.pharmacy[i].id +'">'+ data.pharmacy[i].name+'</option>';
+				str += '<tr><td>'+data.pharmacy[i].name+'</td>';
+				str += '<td>'+data.pharmacy[i].address+'</td></tr>';
 			}
-			$("#pharmacySelect").append(str);
+			$("#pharmacyTbody").append(str);
 			$('#medicinePharmacyModal').modal('show');
 		},
 		error: function (message) {

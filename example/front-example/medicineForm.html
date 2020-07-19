@@ -22,7 +22,7 @@
     <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js"></script>
 
     <link rel="stylesheet" href="css/index.css">
-    <script src="js/form.js"></script>
+    <script src="js/medicineForm.js"></script>
 
 </head>
 
@@ -32,18 +32,18 @@
         <!-- Sidebar  -->
         <nav id="sidebar">
             <div class="sidebar-header">
-                <h3>Example App</h3>
+                <a href="./index.html"><h3>Example app</h3></a>
             </div>
 
             <ul class="list-unstyled components">
                 <li class="active">
-                    <a href="file:///C:/Users/Marijana/Desktop/jquery%20example/index.html">Medicine</a>
+                    <a href="./medicine.html">Medicine</a>
                 </li>
                 <li>
-                    <a href="file:///C:/Users/Marijana/Desktop/jquery%20example/pharmacy.html">Pharmacy</a>
+                    <a href="./pharmacy.html">Pharmacy</a>
                 </li>
                 <li>
-                    <a href="file:///C:/Users/Marijana/Desktop/jquery%20example/pharmacist.html">Pharmacist</a>
+                    <a href="./pharmacist.html">Pharmacist</a>
                 </li>
             </ul>
 
@@ -85,10 +85,10 @@
                             <input type="number" class="form-control" name="availableAmount" id="availableAmount">
                         </div>
                         <div class="form-group">
-                            <label for="name">Pharmacies:</label>
-                            <button type="button" id="pharmacyBtn">Pharmacy</button>
+                            <label for="name">Pharmacy:</label>
+                            <button type="button" class="btn" id="pharmacyBtn"><i class="fas fa-external-link-alt"></i></button>
                         </div>
-                        <button type="submit" id="submitBtnId" class="btn btn-dark">Submit</button>
+                        <button type="submit" id="submitBtnId" class="btn btn-info py-2 px-4 mt-3">Submit</button>
                     </form>
                 </div>
             </div>
@@ -107,15 +107,21 @@
                 <div class="modal-body">
                     <form id="MedicinePharmacyForm">
                         <div class="form-group">
-                            <label for="name">Pharmacy:</label>
-                            <select class="form-control" name="pharmacy" id="pharmacySelect" multiple>
-                            
-                            </select>
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Naziv</th>
+                                        <th>Adresa</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="pharmacyTbody">
+                                   
+                                </tbody>
+                            </table>
                         </div>
-                        
-                        <button type="button" id="modalPositiveBtnId" class="btn btn-primary">Add</button>
-                        <button type="button" class="btn btn-danger" data-dismiss="modal"
-                            style="float: right;">Close</button>
+
+                        <button type="button" id="modalPositiveBtnId" class="btn btn-info py-2 px-3" style="float: right;">Choose</button>
                     </form>
                 </div>
 

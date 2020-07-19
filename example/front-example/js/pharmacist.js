@@ -17,28 +17,6 @@ function addButtonListeners() {
         $('#pharmacistForm')[0].reset();
         $('#pharmacistModal').modal('show');
 	});
-	
-	$('#addBtnId').unbind("click").click(function () {
-		var d = {};
-		d.firstName = $('#pharmacistModal #firstName').val();
-		d.lastName = $('#pharmacistModal #lastName').val();
-		d.email = $('#pharmacistModal #email').val();
-		d.address = $('#pharmacistModal #address').val();
-		d.dateOfBirth = $('#pharmacistModal #dateOfBirth').val();
-		d.phoneNumber = $('#pharmacistModal #phoneNumber').val();
-		$.ajax({
-			url: 'http://localhost:8080/pharmacist',
-			type: 'POST',
-			contentType: 'application/json',
-			data: JSON.stringify(d),
-			success: function (data) {
-				console.log(data);
-			},
-			error: function (message) {
-				console.log(message.responseText);
-			}
-		});
-	});
 
 }
 
@@ -49,7 +27,6 @@ function showPharmacists() {
         contentType: 'application/json',
         success: function (data) {
             for (i in data) {
-				console.warn(data);
 				var date = new Date(data[i].dateOfBirth);
 				date = + ((date.getDate() > 9) ? date.getDate() : ('0' + date.getDate())) +'/'+ ((date.getMonth() > 8) ? (date.getMonth() + 1) : ('0' + (date.getMonth() + 1))) + '/' + date.getFullYear();
 
@@ -60,7 +37,7 @@ function showPharmacists() {
 				str += '<td> ' + data[i].phoneNumber + '</td> ';
 				str += '<td> ' + date + '</td> ';
 				str += '<td> ' + data[i].address + '</td> ';
-                str += '<td> <a href="#" title="Edit" class="editPharmacist" name="' + data[i].id + '" id="editPharmacist' + data[i].id + '" ><i class="fas fa-edit" name="' + data[i].id + '"></i></a>';
+				str += '<td> <a href="./pharmacistForm.html?id=' + data[i].id + '" title="Edit" ><i class="fas fa-edit"></i></a>';
                 str += ' &nbsp; <a href="#" title="Delete" class="deletePharmacist" name="' + data[i].id + '" id="deletePharmacist' + data[i].id + '"><i class="fas fa-trash-alt" name="' + data[i].id + '"></i></a> </td> </tr>';
                 $("#pharmacistTbodyId").append(str);
             }
@@ -77,59 +54,6 @@ function showPharmacists() {
             console.log(message.responseText);
         }
     });
-}
-
-
-function editPharmacist(id) {
-    $.ajax({
-        url: 'http://localhost:8080/pharmacist/' + id,
-        type: 'get',
-        contentType: 'application/json',
-        success: function (data) {
-			var date = new Date(data.dateOfBirth);
-			var day = ("0" + date.getDate()).slice(-2);
-			var month = ("0" + (date.getMonth() + 1)).slice(-2);
-			var selectedDate = date.getFullYear()+"-"+(month)+"-"+(day) ;
-			$("#modal-title").text("Edit pharmacist");
-			$('#firstName').val(data.firstName);
-			$('#lastName').val(data.lastName);
-			$('#email').val(data.email);
-			$('#address').val(data.address);
-			$('#dateOfBirth').val(selectedDate);
-			$('#phoneNumber').val(data.phoneNumber);
-			$('#availableAmount').val(data.availableAmount);
-            $('#addBtnId').hide();
-            $('#editBtnId').show();
-            $('#pharmacistModal').modal('show');
-
-            $('#editBtnId').unbind("click").click(function () {
-				var d = {};
-				d.firstName = $('#pharmacistModal #firstName').val();
-				d.lastName = $('#pharmacistModal #lastName').val();
-				d.email = $('#pharmacistModal #email').val();
-				d.address = $('#pharmacistModal #address').val();
-				d.dateOfBirth = $('#pharmacistModal #dateOfBirth').val();
-				d.phoneNumber = $('#pharmacistModal #phoneNumber').val();
-				
-				$.ajax({
-					url: 'http://localhost:8080/pharmacist/' + id,
-					type: 'PUT',
-					contentType: 'application/json',
-					data: JSON.stringify(d),
-					success: function (data) {
-						$('#pharmacistModal').modal('hide');
-					},
-					error: function (message) {
-						console.log(message.responseText);
-					}
-				});
-            });
-        },
-        error: function (message) {
-            console.log(message.responseText);
-        }
-    });
-
 }
 
 function deletePharmacist(id) {

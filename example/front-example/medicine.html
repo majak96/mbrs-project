@@ -22,28 +22,28 @@
     <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js"></script>
 
     <link rel="stylesheet" href="css/index.css">
-    <script src="js/pharmacist.js"></script>
+    <script src="js/index.js"></script>
 
 </head>
 
 <body>
     <div class="wrapper">
 
-         <!-- Sidebar  -->
-         <nav id="sidebar">
+        <!-- Sidebar  -->
+        <nav id="sidebar">
             <div class="sidebar-header">
                 <a href="./index.html"><h3>Example app</h3></a>
             </div>
 
             <ul class="list-unstyled components">
-                <li>
-                    <a href="./medicine.html">Medicine</a>
+                <li class="active">
+                    <a href="">Medicine</a>
                 </li>
                 <li>
                     <a href="./pharmacy.html">Pharmacy</a>
                 </li>
-                <li class="active">
-                    <a href="">Pharmacist</a>
+                <li>
+                    <a href="./pharmacist.html">Pharmacist</a>
                 </li>
             </ul>
 
@@ -66,11 +66,11 @@
                         </button>
                     </div>
                     <div class="col-4">
-                        <h3>Pharmacist</h3>
+                        <h3>Medicine</h3>
                     </div>
                     <div class="col-3">
-                        <a id="addMedicineBtn" style="margin-top: 0.2cm;" class="btn button" href="./pharmacistForm.html"><i style="color: #3c403d;"
-                            class="fas fa-plus-circle"></i><span> Add pharmacy</span></a>
+                        <a id="addMedicineBtn" style="margin-top: 0.2cm;" class="btn button" href="./medicineForm.html"><i style="color: #3c403d;"
+                            class="fas fa-plus-circle"></i><span> Add medicine</span></a>
                     </div>
                 </div>
 
@@ -79,23 +79,52 @@
                         <table class="table table-striped table-hover">
                             <thead>
                                 <tr>
-                                    <th>#</th>
-                                    <th>First name</th>
-                                    <th>Last name</th>
-                                    <th>Email</th>
-                                    <th>Phone number</th>
-                                    <th>Date of birth</th>
-                                    <th>Address</th>
-                                    <th>Actions</th>
+                                    <th>No.</th>
+                                    <th>Name</th>
+                                    <th>Price</th>
+                                    <th>Available amount</th>
+                                    <th>Pharmacy</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
-                            <tbody id="pharmacistTbodyId">
+                            <tbody id="medicineTbodyId">
 
                             </tbody>
                         </table>
 
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MEDICINE - PHARMACY DIALOG -->
+    <div class="modal fade" id="medicinePharmacyModal">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h4 class="modal-title" id="modal-title">Pharmacy</h4>
+                    <button type="button" class="close" data-dismiss="modal">×</button>
+                </div>
+                <div class="modal-body">
+                    <form id="MedicinePharmacyForm">
+                        <div class="form-group">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Naziv</th>
+                                        <th>Adresa</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="pharmacyTbody">
+                                   
+                                </tbody>
+                            </table>
+                        </div>
+                    </form>
+                </div>
+
             </div>
         </div>
     </div>
