@@ -40,6 +40,9 @@ ${entity.accessModifier} class Base${entity.name?cap_first} <#if (entity.ancesto
 		   </#if>
 		   <#lt>)</#if>
 	</#if>
+	<#if property.jsonIgnore>
+	@JsonIgnore
+	</#if>
 	${property.accessModifier} ${property.type.name} ${property.name};<#if !property?is_last>${'\n'}</#if>
 	</#list>
 
@@ -63,6 +66,9 @@ ${entity.accessModifier} class Base${entity.name?cap_first} <#if (entity.ancesto
 			<#lt><#if (property.cascade)?? || (property.fetch)?? || (property.mappedBy)?? || (property.optional)??>, </#if>orphanRemoval = ${property.orphanRemoval?c}<#rt>
 		</#if>
 		<#lt>)</#if>
+	<#if property.jsonIgnore>
+	@JsonIgnore
+	</#if>
 	${property.accessModifier} <#rt>
 	<#if property.upper == -1>
 		<#lt>Set<<#rt> 

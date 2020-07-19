@@ -61,7 +61,7 @@ public class Handler extends DefaultHandler {
 		defaultTypes.put("OneToOne", new FMType("OneToOne", "javax.persistence"));
 		defaultTypes.put("MappedSuperclass", new FMType("MappedSuperclass", "javax.persistence"));
 		defaultTypes.put("Table", new FMType("Table", "javax.persistence"));
-
+		defaultTypes.put("JsonIgnore", new FMType("JsonIgnore", "com.fasterxml.jackson.annotation"));
 	}
 
 	@Override
@@ -275,21 +275,31 @@ public class Handler extends DefaultHandler {
 				// check if create exists
 				if (attributes.getValue("create") != null) {
 					baseEntity.setCreate(Boolean.parseBoolean(attributes.getValue("create")));
+				} else {
+					baseEntity.setCreate(true);
 				}
 				
 				// check if update exists
 				if (attributes.getValue("update") != null) {
 					baseEntity.setUpdate(Boolean.parseBoolean(attributes.getValue("update")));
+				} else {
+					baseEntity.setUpdate(true);
 				}
 				
 				// check if delete exists
 				if (attributes.getValue("delete") != null) {
 					baseEntity.setDelete(Boolean.parseBoolean(attributes.getValue("delete")));
+				} else {
+					baseEntity.setDelete(true);
 				}
 				
 				// check if label exists
 				if (attributes.getValue("label") != null) {
 					baseEntity.setLabel(attributes.getValue("label"));
+				}
+				
+				if (attributes.getValue("group") != null) {
+					baseEntity.setGroup(attributes.getValue("group"));
 				}
 
 			}
@@ -338,10 +348,19 @@ public class Handler extends DefaultHandler {
 
 				if (attributes.getValue("scale") != null) {
 					persistentProperty.setScale(Integer.parseInt(attributes.getValue("scale")));
-				}
+				} 
 
 				if (attributes.getValue("unique") != null) {
 					persistentProperty.setUnique(attributes.getValue("unique").equals("true"));
+				}
+				
+				if (attributes.getValue("jsonIgnore") != null) {
+					boolean ignore = Boolean.parseBoolean(attributes.getValue("jsonIgnore"));
+					persistentProperty.setJsonIgnore(ignore);
+
+					if(ignore)
+						baseEntity.addImportedPackage(defaultTypes.get("JsonIgnore"));
+					
 				}
 			}
 
@@ -384,6 +403,15 @@ public class Handler extends DefaultHandler {
 				if (attributes.getValue("optional") != null) {
 					linkedProperty.setOptional(Boolean.parseBoolean(attributes.getValue("optional")));
 				}
+				
+				if (attributes.getValue("jsonIgnore") != null) {
+					boolean ignore = Boolean.parseBoolean(attributes.getValue("jsonIgnore"));
+					linkedProperty.setJsonIgnore(ignore);
+
+					if(ignore)
+						baseEntity.addImportedPackage(defaultTypes.get("JsonIgnore"));
+					
+				} 
 			}
 
 			break;
@@ -407,6 +435,12 @@ public class Handler extends DefaultHandler {
 				
 				if (attributes.getValue("label") != null) {
 					property.setLabel(attributes.getValue("label"));
+				}
+				
+				if (attributes.getValue("showColumn") != null) {
+					property.setShowColumn(Boolean.parseBoolean(attributes.getValue("showColumn")));
+				} else {
+					property.setShowColumn(true);
 				}
 				
 			}
@@ -433,6 +467,12 @@ public class Handler extends DefaultHandler {
 				if (attributes.getValue("label") != null) {
 					property.setLabel(attributes.getValue("label"));
 				}
+				
+				if (attributes.getValue("showColumn") != null) {
+					property.setShowColumn(Boolean.parseBoolean(attributes.getValue("showColumn")));
+				} else {
+					property.setShowColumn(true);
+				}
 			}
 
 			break;
@@ -458,6 +498,11 @@ public class Handler extends DefaultHandler {
 					property.setLabel(attributes.getValue("label"));
 				}
 				
+				if (attributes.getValue("showColumn") != null) {
+					property.setShowColumn(Boolean.parseBoolean(attributes.getValue("showColumn")));
+				} else {
+					property.setShowColumn(true);
+				}
 			}
 
 			break;
@@ -580,6 +625,7 @@ public class Handler extends DefaultHandler {
 			System.out.println("create: " + entry.getValue().getCreate());
 			System.out.println("update: " + entry.getValue().getUpdate());
 			System.out.println("delete: " + entry.getValue().getDelete());
+			System.out.println("group: " + entry.getValue().getGroup());
 
 			System.out.println("PROPERTIES: ");
 			for (FMPersistentProperty fmp : entry.getValue().getPersistentProperties()) {
@@ -595,6 +641,8 @@ public class Handler extends DefaultHandler {
 				System.out.println("Property readonly: " + fmp.getReadOnly());
 				System.out.println("Property lookup: " + fmp.getLookUpProperty());
 				System.out.println("Property component type: " + fmp.getComponentType());
+				System.out.println("Property show column: " + fmp.getShowColumn());
+				System.out.println("Property jsonIgnore: " + fmp.getJsonIgnore());
 
 				System.out.println("******************************************");
 			}
@@ -610,6 +658,7 @@ public class Handler extends DefaultHandler {
 				System.out.println("Property component type: " + fmp.getComponentType());
 				System.out.println("Property zoom: " + fmp.getZoom());
 				System.out.println("Property next: " + fmp.getNext());
+				System.out.println("Property jsonIgnore: " + fmp.getJsonIgnore());
 
 				System.out.println("******************************************");
 			}

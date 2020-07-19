@@ -2,10 +2,14 @@ package ${project_package}.services;
 
 import java.util.Optional;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+<#list linkedProperties as property>
+import ${property.type.typePackage}.${property.type.name?cap_first};
+</#list>
 import ${package}.${class_name};
 import ${project_package}.repositories.${class_name}Repository;
 
@@ -56,6 +60,12 @@ public class ${class_name}BaseService {
 
 		return this.save(old${class_name});
 	}
+	
+	<#list linkedProperties as property>
+   	public Set<${property.type.name?cap_first}> getAvailable${property.name?cap_first}() {
+		return this.${class_name?lower_case}Repository.findAvailable${property.name?cap_first}();
+	}
+	</#list>
 
 
 }

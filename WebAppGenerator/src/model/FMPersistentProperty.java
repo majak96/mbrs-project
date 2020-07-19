@@ -12,6 +12,8 @@ public class FMPersistentProperty extends FMProperty {
 	private Boolean editable;
 	private Boolean readOnly;
 	private Boolean lookUpProperty;
+	private Boolean showColumn;
+	
 
 	public FMPersistentProperty() {
 		super();
@@ -102,5 +104,14 @@ public class FMPersistentProperty extends FMProperty {
 	public void setLookUpProperty(Boolean lookUpProperty) {
 		this.lookUpProperty = lookUpProperty;
 	}
+
+	public Boolean getShowColumn() {
+		return showColumn;
+	}
+
+	public void setShowColumn(Boolean showColumn) {
+		this.showColumn = showColumn;
+	}
+
 
 }
