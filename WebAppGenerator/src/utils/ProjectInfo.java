@@ -11,6 +11,8 @@ public class ProjectInfo {
 	private MainFrame mainFrame;
 
 	private String projectPath;
+	private String frontendPath;
+	private String backendPath;
 	private String projectName;
 	private String projectPackage;
 
@@ -132,6 +134,22 @@ public class ProjectInfo {
 
 	public void setMainFrame(MainFrame mainFrame) {
 		this.mainFrame = mainFrame;
+	}
+
+	public String getFrontendPath() {
+		return frontendPath;
+	}
+
+	public void setFrontendPath(String frontendPath) {
+		this.frontendPath = frontendPath;
+	}
+
+	public String getBackendPath() {
+		return backendPath;
+	}
+
+	public void setBackendPath(String backendPath) {
+		this.backendPath = backendPath;
 	}
 
 }

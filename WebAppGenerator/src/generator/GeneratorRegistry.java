@@ -39,20 +39,33 @@ public class GeneratorRegistry {
 
 	private void createProjectStructure() {
 		ProjectInfo projectInfo = ProjectInfo.getInstance();
-		String projectNamePath = projectInfo.getProjectPath() + File.separator + projectInfo.getProjectName();
+		
+		String projectPath = projectInfo.getProjectPath() + File.separator + "Generated Application";
+		projectInfo.setProjectPath(projectPath);
+		GeneratorUtils.createDirectory(projectPath);
+		
+		String backendPath = projectPath + File.separator + projectInfo.getProjectName() + "_backend";
+		projectInfo.setBackendPath(backendPath);
+		GeneratorUtils.createDirectory(backendPath);
 
-		GeneratorUtils.createDirectory(projectNamePath);
+		String frontendPath = projectPath + File.separator + projectInfo.getProjectName()+"_frontend";
+		projectInfo.setFrontendPath(frontendPath);
+		
+		// create the project structure for frontend generated files
+		GeneratorUtils.createDirectory(frontendPath);
+		GeneratorUtils.createDirectory(frontendPath + File.separator + "css");
+		GeneratorUtils.createDirectory(frontendPath + File.separator + "js");
 
 		// create the project structure for generated files
-		GeneratorUtils.createDirectory(projectNamePath + File.separator + "src-gen");
-		GeneratorUtils.createDirectory(projectNamePath + File.separator + "src-gen" + File.separator + "main");
+		GeneratorUtils.createDirectory(backendPath + File.separator + "src-gen");
+		GeneratorUtils.createDirectory(backendPath + File.separator + "src-gen" + File.separator + "main");
 		GeneratorUtils.createDirectory(
-				projectNamePath + File.separator + "src-gen" + File.separator + "main" + File.separator + "resources");
+				backendPath + File.separator + "src-gen" + File.separator + "main" + File.separator + "resources");
 		GeneratorUtils.createDirectory(
-				projectNamePath + File.separator + "src-gen" + File.separator + "main" + File.separator + "java");
+				backendPath + File.separator + "src-gen" + File.separator + "main" + File.separator + "java");
 
 		String[] packageGenStrings = projectInfo.getProjectPackage().split("\\.");
-		String baseGenPath = projectNamePath + File.separator + "src-gen" + File.separator + "main" + File.separator
+		String baseGenPath = backendPath + File.separator + "src-gen" + File.separator + "main" + File.separator
 				+ "java";
 		for (String packageString : packageGenStrings) {
 			baseGenPath += File.separator + packageString;
@@ -66,15 +79,15 @@ public class GeneratorRegistry {
 		projectInfo.setBaseGeneratedFilesPath(baseGenPath);
 
 		// create the project structure for handwritten files
-		GeneratorUtils.createDirectory(projectNamePath + File.separator + "src");
-		GeneratorUtils.createDirectory(projectNamePath + File.separator + "src" + File.separator + "main");
+		GeneratorUtils.createDirectory(backendPath + File.separator + "src");
+		GeneratorUtils.createDirectory(backendPath + File.separator + "src" + File.separator + "main");
 		GeneratorUtils.createDirectory(
-				projectNamePath + File.separator + "src" + File.separator + "main" + File.separator + "resources");
+				backendPath + File.separator + "src" + File.separator + "main" + File.separator + "resources");
 		GeneratorUtils.createDirectory(
-				projectNamePath + File.separator + "src" + File.separator + "main" + File.separator + "java");
+				backendPath + File.separator + "src" + File.separator + "main" + File.separator + "java");
 
 		String[] packageStrings = projectInfo.getProjectPackage().split("\\.");
-		String basePath = projectNamePath + File.separator + "src" + File.separator + "main" + File.separator + "java";
+		String basePath = backendPath + File.separator + "src" + File.separator + "main" + File.separator + "java";
 		for (String packageString : packageStrings) {
 			basePath += File.separator + packageString;
 			GeneratorUtils.createDirectory(basePath);

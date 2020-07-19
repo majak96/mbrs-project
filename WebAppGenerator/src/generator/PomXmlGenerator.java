@@ -22,8 +22,7 @@ public class PomXmlGenerator extends AbstractGenerator {
 		try {
 			Template temp = generatorInfo.getConfiguration().getTemplate("pom_xml.ftl");
 
-			String propertiesPath = ProjectInfo.getInstance().getProjectPath() + File.separatorChar
-					+ ProjectInfo.getInstance().getProjectName();
+			String propertiesPath = ProjectInfo.getInstance().getBackendPath();
 			File file = new File(propertiesPath + File.separatorChar + "pom.xml");
 			file.createNewFile();
 
