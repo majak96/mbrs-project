@@ -27,6 +27,7 @@ public class GeneratorRegistry {
 		generators.add(new ControllerGenerator());
 		generators.add(new ServiceBaseGenerator());
 		generators.add(new ServiceGenerator());
+		generators.add(new FrontendFormGenerator());
 	}
 
 	public void generate() {
