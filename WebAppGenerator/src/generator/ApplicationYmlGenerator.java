@@ -23,7 +23,7 @@ public class ApplicationYmlGenerator extends AbstractGenerator {
 			Template temp = generatorInfo.getConfiguration().getTemplate("application_yml.ftl");
 
 			String propertiesPath = ProjectInfo.getInstance().getProjectPath() + File.separatorChar
-					+ ProjectInfo.getInstance().getProjectName()+"_backend" + File.separatorChar + "src-gen" + File.separatorChar
+					+ ProjectInfo.getInstance().getProjectName() + File.separatorChar + "src-gen" + File.separatorChar
 					+ "main" + File.separatorChar + "resources";
 			File file = new File(propertiesPath + File.separatorChar + "application.yml");
 			file.createNewFile();

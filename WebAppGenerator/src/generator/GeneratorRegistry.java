@@ -1,6 +1,9 @@
 package generator;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,22 +42,30 @@ public class GeneratorRegistry {
 
 	private void createProjectStructure() {
 		ProjectInfo projectInfo = ProjectInfo.getInstance();
-		
+
 		String projectPath = projectInfo.getProjectPath() + File.separator + "Generated Application";
 		projectInfo.setProjectPath(projectPath);
 		GeneratorUtils.createDirectory(projectPath);
-		
-		String backendPath = projectPath + File.separator + projectInfo.getProjectName() + "_backend";
+
+		String backendPath = projectPath + File.separator + projectInfo.getProjectName();
 		projectInfo.setBackendPath(backendPath);
 		GeneratorUtils.createDirectory(backendPath);
 
-		String frontendPath = projectPath + File.separator + projectInfo.getProjectName()+"_frontend";
+		String frontendPath = projectPath + File.separator + projectInfo.getProjectName() + "_frontend";
 		projectInfo.setFrontendPath(frontendPath);
-		
+
 		// create the project structure for frontend generated files
 		GeneratorUtils.createDirectory(frontendPath);
 		GeneratorUtils.createDirectory(frontendPath + File.separator + "css");
 		GeneratorUtils.createDirectory(frontendPath + File.separator + "js");
+
+		if(Files.notExists(Paths.get(frontendPath + File.separator + "css/index.css"))){
+			try {
+				Files.copy(Paths.get("resources/index.css"), Paths.get(frontendPath + File.separator + "css/index.css"));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 
 		// create the project structure for generated files
 		GeneratorUtils.createDirectory(backendPath + File.separator + "src-gen");

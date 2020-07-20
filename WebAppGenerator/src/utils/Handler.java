@@ -297,6 +297,9 @@ public class Handler extends DefaultHandler {
 				if (attributes.getValue("label") != null) {
 					baseEntity.setLabel(attributes.getValue("label"));
 				}
+				else {
+					baseEntity.setLabel(baseEntity.getName());
+				}
 				
 				if (attributes.getValue("group") != null) {
 					baseEntity.setGroup(attributes.getValue("group"));
@@ -428,6 +431,7 @@ public class Handler extends DefaultHandler {
 			
 			if(property != null) {
 				property.setEditable(true);
+				property.setReadOnly(false);
 				
 				if (attributes.getValue("componentType") != null) {
 					property.setComponentType(ComponentType.valueOf(attributes.getValue("componentType")));
@@ -435,6 +439,9 @@ public class Handler extends DefaultHandler {
 				
 				if (attributes.getValue("label") != null) {
 					property.setLabel(attributes.getValue("label"));
+				}
+				else {
+					property.setLabel(property.getName());
 				}
 				
 				if (attributes.getValue("showColumn") != null) {
@@ -459,6 +466,7 @@ public class Handler extends DefaultHandler {
 			
 			if(property != null) {
 				property.setReadOnly(true);
+				property.setEditable(false);
 				
 				if (attributes.getValue("componentType") != null) {
 					property.setComponentType(ComponentType.valueOf(attributes.getValue("componentType")));
@@ -466,6 +474,9 @@ public class Handler extends DefaultHandler {
 				
 				if (attributes.getValue("label") != null) {
 					property.setLabel(attributes.getValue("label"));
+				}
+				else {
+					property.setLabel(property.getName());
 				}
 				
 				if (attributes.getValue("showColumn") != null) {
@@ -497,6 +508,9 @@ public class Handler extends DefaultHandler {
 				if (attributes.getValue("label") != null) {
 					property.setLabel(attributes.getValue("label"));
 				}
+				else {
+					property.setLabel(property.getName());
+				}
 				
 				if (attributes.getValue("showColumn") != null) {
 					property.setShowColumn(Boolean.parseBoolean(attributes.getValue("showColumn")));
@@ -523,6 +537,9 @@ public class Handler extends DefaultHandler {
 				if (attributes.getValue("label") != null) {
 					linkedProperty.setLabel(attributes.getValue("label"));
 				}
+				else {
+					linkedProperty.setLabel(linkedProperty.getName());
+				}
 				
 			}
 
@@ -543,6 +560,9 @@ public class Handler extends DefaultHandler {
 				
 				if (attributes.getValue("label") != null) {
 					linkedProperty.setLabel(attributes.getValue("label"));
+				}
+				else {
+					linkedProperty.setLabel(linkedProperty.getName());
 				}
 				
 			}
