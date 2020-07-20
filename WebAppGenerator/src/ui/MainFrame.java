@@ -109,6 +109,8 @@ public class MainFrame extends JFrame {
 					projectInfo.setDatabaseUsername(databaseUsernameField.getText().trim());
 					projectInfo.setDatabasePassword(new String(databasePasswordField.getPassword()));
 					projectInfo.setResourceFile(resourceFilePath);
+					projectInfo.setApplicationName(applicationNameField.getText().trim());
+					projectInfo.setApplicationPort(applicationPortField.getText().trim());
 					Application.generate();
 					JOptionPane.showMessageDialog(MainFrame.this,
 						    "Generation completed");

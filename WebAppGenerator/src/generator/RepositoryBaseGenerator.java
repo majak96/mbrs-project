@@ -38,6 +38,7 @@ public class RepositoryBaseGenerator extends AbstractGenerator {
 			String entityName = entity.getName().substring(0, 1).toUpperCase() + entity.getName().substring(1);
 			model.put("class_name", entityName);
 			model.put("package", entity.getTypePackage());
+			model.put("linkedProperties", entity.getLinkedProperties());
 
 			for (FMPersistentProperty property : entity.getPersistentProperties()) {
 				if (property.getId()) {

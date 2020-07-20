@@ -10,6 +10,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.Optional;
+import java.util.Set;
+
+<#list linkedProperties as property>
+import ${property.type.typePackage}.${property.type.name?cap_first};
+</#list>
 
 import ${package}.${class_name?cap_first};
 import ${project_package}.services.${class_name?cap_first}Service;
@@ -53,5 +61,31 @@ public class ${class_name?cap_first}BaseController {
 		
 		return (updated${class_name?cap_first} == null) ? ResponseEntity.badRequest().build() : ResponseEntity.ok(updated${class_name?cap_first});
 	}
+
+	<#list linkedProperties as property>
+	@GetMapping("/${property.name}")
+	public ResponseEntity<?> getAvailable${property.name?cap_first}(@RequestParam Optional<${id_class?cap_first}> id) {
+
+		// edit
+		if (id.isPresent()) {
+			${class_name} ${class_name?lower_case} = this.${class_name?lower_case}Service.getOne(id.get());
+			if (${class_name?lower_case} == null)
+				return ResponseEntity.badRequest().build();
+
+			if (${class_name?lower_case}.get${property.name?cap_first}() != null) {
+				Set<${property.name?cap_first}> ${property.name} = this.${class_name?lower_case}Service.getAvailable${property.name?cap_first}();
+				<#if property.upper == 1>
+				${property.name}.add(${class_name?lower_case}.get${property.name?cap_first}());
+				<#else>
+				${property.name}.addAll(${class_name?lower_case}.get${property.name?cap_first}());
+				</#if>
+				return ResponseEntity.ok(${property.name});
+			}
+		}
+
+		return ResponseEntity.ok(this.${class_name?lower_case}Service.getAvailable${property.name?cap_first}());
+
+	}
+	</#list>
 
 }

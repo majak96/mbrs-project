@@ -14,6 +14,8 @@ public class FMProperty extends FMNamedElement {
 	
 	private String label;
 	
+	private boolean jsonIgnore;
+	
 
 	public FMProperty() {
 
@@ -79,6 +81,15 @@ public class FMProperty extends FMNamedElement {
 	public void setLabel(String label) {
 		this.label = label;
 	}
+
+	public boolean getJsonIgnore() {
+		return jsonIgnore;
+	}
+
+	public void setJsonIgnore(boolean jsonIgnore) {
+		this.jsonIgnore = jsonIgnore;
+	}
+
 
 
 }

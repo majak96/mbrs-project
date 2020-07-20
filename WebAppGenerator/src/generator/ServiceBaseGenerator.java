@@ -53,6 +53,7 @@ public class ServiceBaseGenerator extends AbstractGenerator {
 			this.model.put("class_name", entityName);
 			this.model.put("package", entity.getTypePackage());
 			this.model.put("properties", properties);
+			this.model.put("linkedProperties", entity.getLinkedProperties());
 
 			for (FMPersistentProperty property : entity.getPersistentProperties()) {
 				if (property.getId()) {

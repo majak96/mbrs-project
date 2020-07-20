@@ -8,6 +8,7 @@ import java.util.List;
 import freemarker.template.Template;
 import model.FMEntity;
 import model.FMModel;
+import model.FMPersistentProperty;
 import utils.ProjectInfo;
 
 public class ControllerBaseGenerator extends AbstractGenerator {
@@ -32,7 +33,14 @@ public class ControllerBaseGenerator extends AbstractGenerator {
 			for (FMEntity entity : entities) {
 				model.put("class_name", entity.getName());
 				model.put("package", entity.getTypePackage());
-
+				model.put("linkedProperties", entity.getLinkedProperties());
+				for (FMPersistentProperty property : entity.getPersistentProperties()) {
+					if (property.getId()) {
+						model.put("id_class", property.getType().getName());
+						break;
+					}
+				}
+				
 				String entityName = entity.getName().substring(0, 1).toUpperCase() + entity.getName().substring(1);
 				File file = new File(controllerPath + File.separatorChar + entityName + "BaseController.java");
 				file.createNewFile();

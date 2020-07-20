@@ -21,6 +21,8 @@ public class FMEntity extends FMType {
 	private Boolean update;
 	
 	private Boolean delete;
+	
+	private String group;
 
 	private List<FMPersistentProperty> persistentProperties = new ArrayList<FMPersistentProperty>();
 	private List<FMLinkedProperty> linkedProperties = new ArrayList<FMLinkedProperty>();
@@ -130,5 +132,13 @@ public class FMEntity extends FMType {
 
 	public void setLabel(String label) {
 		this.label = label;
+	}
+
+	public String getGroup() {
+		return group;
+	}
+
+	public void setGroup(String group) {
+		this.group = group;
 	}
 }
