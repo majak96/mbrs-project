@@ -24,6 +24,8 @@ public class GeneratorRegistry {
 		generators.add(new ControllerGenerator());
 		generators.add(new ServiceBaseGenerator());
 		generators.add(new ServiceGenerator());
+		generators.add(new OvirviewJsGenerator());
+		generators.add(new FormJsGenerator());
 	}
 
 	public void generate() {
