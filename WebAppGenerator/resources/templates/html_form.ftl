@@ -57,11 +57,6 @@
                                 <span></span>
                                 <span></span>
                             </button>
-                            <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button"
-                                data-toggle="collapse" data-target="#navbarSupportedContent"
-                                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                                <i class="fas fa-edit"></i>
-                            </button>
                         </div>
                         <div class="col-4">
                             <h3>${entity.label}</h3>
@@ -108,7 +103,7 @@
         <#list entity.linkedProperties as property>
         <!-- MODAL DIALOGS FOR LINKED PROPERTIES -->
         <div class="modal fade" id="${entity.name?lower_case}${property.name?cap_first}Modal">
-            <div class="modal-dialog modal-lg">
+            <div class="modal-dialog modal-lg" style="max-width: 70%;">
                 <div class="modal-content">
 
                     <div class="modal-header">
@@ -135,7 +130,7 @@
                                     </tbody>
                                 </table>
                             </div>
-                            <button type="button" id="modalPositiveBtnId" class="btn btn-info py-2 px-3" style="float: right;">Choose</button>
+                            <button type="button" id="${property.name}PositiveBtnId" class="btn btn-info py-2 px-3" style="float: right;">Choose</button>
                         </form>
                         
                     </div>

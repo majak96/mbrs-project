@@ -30,6 +30,8 @@ public class GeneratorRegistry {
 		generators.add(new OvirviewJsGenerator());
 		generators.add(new FormJsGenerator());
 		generators.add(new FrontendFormGenerator());
+		generators.add(new IndexHTMLGenerator());
+		generators.add(new OverviewHTMLGenerator());
 	}
 
 	public void generate() {

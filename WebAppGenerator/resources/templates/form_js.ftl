@@ -35,7 +35,6 @@ function addButtonListeners() {
 
 }
 
-//SELECTED VALURS
 function submitFunction(event<#list entity.linkedProperties as param>, ${param.name}Values</#list>) {
 	return function(event) {
 		event.preventDefault();
@@ -45,12 +44,14 @@ function submitFunction(event<#list entity.linkedProperties as param>, ${param.n
 		<#list entity.persistentProperties as property>
 		<#if property.id>
 		<#else>
+		<#if property.editable>
 		d.${property.name} = $('#${property.name}').val();
+		</#if>
 		</#if>
 		</#list>
 	
 		<#list entity.linkedProperties as linkedProperty>
-		<#if linkedProperty.upper == -1 && linkedProperty.oppositeEnd.upper == -1>
+		<#if (linkedProperty.upper == -1 && linkedProperty.oppositeEnd.upper == -1) || (linkedProperty.upper == -1 && linkedProperty.oppositeEnd.upper == 1)>
 		if(${linkedProperty.name}Values != undefined){
 			var ${linkedProperty.name}=[];
 			for(i = 0; i < ${linkedProperty.name}Values.length; i++){
@@ -65,9 +66,8 @@ function submitFunction(event<#list entity.linkedProperties as param>, ${param.n
 			}
 			d.${linkedProperty.name}=${linkedProperty.name};
 		}
-
 		<#-- ManyToOne -->
-		<#elseif linkedProperty.upper == 1 && linkedProperty.oppositeEnd.upper == -1>
+		<#else>
 		if(${linkedProperty.name}Values != undefined){
 			var ${linkedProperty.name}={};
 			<#list linkedProperty.type.persistentProperties as pp>
@@ -96,9 +96,7 @@ function submitFunction(event<#list entity.linkedProperties as param>, ${param.n
 	}
 }
 
-
 <#list entity.linkedProperties as property>
-	
 function all${property.name?cap_first}(event) {
 	return function(event) {
 		event.preventDefault();
@@ -114,7 +112,13 @@ function all${property.name?cap_first}(event) {
 					str += '<tr>';
 					<#list property.type.persistentProperties as persistentProperty>
 					<#if persistentProperty.showColumn>
+					<#if persistentProperty.type.name=='Date'>
+					var date = new Date(data[i].${persistentProperty.name});
+					date = + ((date.getDate() > 9) ? date.getDate() : ('0' + date.getDate())) +'/'+ ((date.getMonth() > 8) ? (date.getMonth() + 1) : ('0' + (date.getMonth() + 1))) + '/' + date.getFullYear();
+					str += '<td>' + date + '</td>';
+					<#else>
 					str += '<td>'+data[i].${persistentProperty.name}+'</td>';
+					</#if>
 					</#if>
 					</#list>
 					<#list property.type.persistentProperties as persistentProperty>
@@ -133,7 +137,7 @@ function all${property.name?cap_first}(event) {
 				$("#${property.name}Tbody").append(str);
 				$('#${class_name?lower_case}${property.name?cap_first}Modal').modal('show');
 
-				$('#modalPositiveBtnId').unbind("click").click(choose${property.name?cap_first}(event));
+				$('#${property.name}PositiveBtnId').unbind("click").click(choose${property.name?cap_first}(event));
 
 			},
 			error: function (message) {
@@ -149,7 +153,7 @@ function choose${property.name?cap_first}(event){
 	return function(event) {
 		event.preventDefault();
 		<#if (property.upper == -1 && property.oppositeEnd.upper == -1) || (property.upper == -1 && property.oppositeEnd.upper == 1)>
-		${property.name}Values = $("input:checkbox:checked", "#${property.name?lower_case}Tbody").map(function() {
+		${property.name}Values = $("input:checkbox:checked", "#${property.name}Tbody").map(function() {
 			return $(this).val();
 		}).get();
 		<#else>
@@ -203,7 +207,13 @@ function edit${class_name?cap_first}(id) {
 					str += '<tr>'
 					<#list property.type.persistentProperties as linksPersistentProperty>
 					<#if linksPersistentProperty.showColumn>
+					<#if linksPersistentProperty.type.name=='Date'>
+					var date = new Date(${property.name}Data[i].${linksPersistentProperty.name});
+					date = + ((date.getDate() > 9) ? date.getDate() : ('0' + date.getDate())) +'/'+ ((date.getMonth() > 8) ? (date.getMonth() + 1) : ('0' + (date.getMonth() + 1))) + '/' + date.getFullYear();
+					str += '<td>' + date + '</td>';
+					<#else>
 					str += '<td>'+${property.name}Data[i].${linksPersistentProperty.name}+'</td>';
+					</#if>
 					</#if>
 					</#list>
 					<#list property.type.persistentProperties as linksPersistentProperty>
@@ -213,7 +223,7 @@ function edit${class_name?cap_first}(id) {
 					if(containsObject(${property.name}Data[i], ${class_name?lower_case}Data.${property.name})){
 					<#else>
 					str += '<td><input type="radio" id="'+${property.name}Data[i].${linksPersistentProperty.name}+'" name="${property.name}" value="'+${property.name}Data[i].${linksPersistentProperty.name}+'"';
-					if(${class_name?lower_case}Data.${property.name}.${linksPersistentProperty.name} == ${property.name}Data[i].${linksPersistentProperty.name}){
+					if(${class_name?lower_case}Data.${property.name} != null && ${class_name?lower_case}Data.${property.name}.${linksPersistentProperty.name} == ${property.name}Data[i].${linksPersistentProperty.name}){
 					</#if>
 						str+='checked ></td>';
 					}
@@ -247,7 +257,7 @@ function edit${class_name?cap_first}(id) {
 				$('#${property.name}Btn').unbind("click").click(function(){
 					$('#${class_name?lower_case}${property.name?cap_first}Modal').modal('show');
 
-					$('#modalPositiveBtnId').unbind("click").click(function () {
+					$('#${property.name}PositiveBtnId').unbind("click").click(function () {
 						event.preventDefault();
 						
 						<#if (property.upper == -1 && property.oppositeEnd.upper == -1) || (property.upper == -1 && property.oppositeEnd.upper == 1)>
@@ -292,7 +302,7 @@ function sendEditRequest(event, id<#list entity.linkedProperties as linkedProper
 		</#list>
 		
 		<#list entity.linkedProperties as linkedProperty>
-		<#if linkedProperty.upper == -1 && linkedProperty.oppositeEnd.upper == -1>
+		<#if (linkedProperty.upper == -1 && linkedProperty.oppositeEnd.upper == -1) || (linkedProperty.upper == -1 && linkedProperty.oppositeEnd.upper == 1)>
 		if(${linkedProperty.name}Values!=undefined){
 			var ${linkedProperty.name}=[];
 			for(i = 0; i < ${linkedProperty.name}Values.length; i++){

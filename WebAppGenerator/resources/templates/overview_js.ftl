@@ -45,10 +45,7 @@ function show${class_name}s() {
 				
 				<#-- LINKED PROPERTIES  -->
 				<#list entity.linkedProperties as property>
-				<#-- Many to many -->
-				<#if (property.upper == -1 && property.oppositeEnd.upper == -1) || (property.upper == -1 && property.oppositeEnd.upper == 1)>
 				str += '<td> <a href="#" title="${property.name?cap_first}s" class="${property.name?lower_case}s" name="' + data[i].${id_class} + '" id="${property.name?lower_case}s' + data[i].${id_class} + '" ><i class="fas fa-external-link-alt" name="' + data[i].${id_class} + '"></i></a>';
-				</#if>
 				</#list>
                 
                 str += '<td> <a href="./${class_name?lower_case}Form.html?id=' + data[i].${id_class} + '" title="Edit" ><i class="fas fa-edit"></i></a>';
@@ -58,11 +55,9 @@ function show${class_name}s() {
 			
 			<#list entity.linkedProperties as property>
 			<#-- Many to many -->
-			<#if (property.upper == -1 && property.oppositeEnd.upper == -1) || (property.upper == -1 && property.oppositeEnd.upper == 1)>
- 			$('.${property.name?lower_case}s').unbind("click").click(function () {
+			$('.${property.name}s').unbind("click").click(function () {
             	show${property.name?cap_first}(getSorceId(event));
             });
-			</#if>
 			</#list>
 			
             $('.delete${class_name?cap_first}').unbind("click").click(function () {
@@ -81,7 +76,7 @@ function show${class_name}s() {
 	
 function show${property.name?cap_first}(id) {
 	$('#${class_name?lower_case}${property.name?cap_first}Modal').modal('show');
-	$('#${property.name?lower_case}Tbody').empty();
+	$('#${property.name}Tbody').empty();
 	$.ajax({
 		url: 'http://localhost:${port}/${class_name?lower_case}/' + id,
 		type: 'GET',
@@ -89,17 +84,56 @@ function show${property.name?cap_first}(id) {
 		success: function (data) {
 
 			str ="";
-			for (i in data.${property.name?lower_case}) {
+			for (i in data.${property.name}) {
 				str += '<tr>';
 				<#-- LINKED PROPERTIES  -->
 				<#list property.type.persistentProperties as persistentProperty>
 				<#if persistentProperty.showColumn>
-				str += '<td>'+data.${property.name?lower_case}[i].${persistentProperty.name}+'</td>';
+				<#if persistentProperty.type.name=='Date'>
+				var date = new Date(data.${property.name}[i].${persistentProperty.name});
+				date = + ((date.getDate() > 9) ? date.getDate() : ('0' + date.getDate())) +'/'+ ((date.getMonth() > 8) ? (date.getMonth() + 1) : ('0' + (date.getMonth() + 1))) + '/' + date.getFullYear();
+				str += '<td>' + date + '</td>';
+				<#else>
+				str += '<td>'+data.${property.name}[i].${persistentProperty.name}+'</td>';
+				</#if>
 				</#if>
 				</#list>
 				str+='</tr>';
 			}
-			$("#${property.name?lower_case}Tbody").append(str);
+			$("#${property.name}Tbody").append(str);
+			$('#${class_name?lower_case}${property.name?cap_first}Modal').modal('show');
+		},
+		error: function (message) {
+			console.log(message.responseText);
+		}
+	});
+}
+<#else>
+function show${property.name?cap_first}(id) {
+	$.ajax({
+		url: 'http://localhost:8080/${class_name?lower_case}/' + id,
+		type: 'GET',
+		contentType: 'application/json',
+		success: function (data) {
+			if (data.${property.name} != null) {
+				<#list property.type.persistentProperties as prop>
+                <#if prop.showColumn>
+				<#if prop.type.name=='Date'>
+				var date = new Date(data.${property.name}[i].${prop.name});
+				date = + ((date.getDate() > 9) ? date.getDate() : ('0' + date.getDate())) +'/'+ ((date.getMonth() > 8) ? (date.getMonth() + 1) : ('0' + (date.getMonth() + 1))) + '/' + date.getFullYear();
+				str += '<td>' + date + '</td>';
+				<#else>
+				$('#${prop.name}').text(data.${property.name}.${prop.name});
+				</#if>
+				</#if>
+				</#list>
+			}else{
+				<#list property.type.persistentProperties as prop>
+                <#if prop.showColumn>
+				$('#${prop.name}').text("");
+				</#if>
+				</#list>
+			}
 			$('#${class_name?lower_case}${property.name?cap_first}Modal').modal('show');
 		},
 		error: function (message) {
@@ -110,7 +144,6 @@ function show${property.name?cap_first}(id) {
 
 </#if>
 </#list>
-		
 
 function delete${class_name?cap_first}(id) {
 	if(confirm("Are you sure you want to delete this?")){
@@ -130,7 +163,6 @@ function delete${class_name?cap_first}(id) {
 		return false;
 	}
 }
-
 
 function getSorceId(event) {
 	let sorce = event.target;
