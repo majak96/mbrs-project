@@ -93,12 +93,10 @@
 
                             <!-- FORM FIELDS FOR LINKED PROPERTIES -->
                             <#list entity.linkedProperties as property>
-                                <#if property.upper == -1 && property.oppositeEnd.upper == -1>
                                 <div class="form-group">
                                     <label for="name">Choose ${property.label}:</label>
                                     <button type="button" class="btn" id="${property.name}Btn"><i class="fas fa-external-link-alt"></i></button>
                                 </div>
-                                </#if>
                             </#list>
                             <button type="submit" id="submitBtnId" class="btn btn-info py-2 px-4 mt-3">Submit</button>
                         </form>
@@ -125,7 +123,9 @@
                                     <thead>
                                         <tr>
                                             <#list property.type.persistentProperties as prop>
+                                            <#if prop.showColumn>
                                             <th>${prop.label}</th>
+                                            </#if>
                                             </#list>
                                             <th></th>
                                         </tr>

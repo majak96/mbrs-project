@@ -1,3 +1,9 @@
+/**
+ * [${.now}]
+ * This file was generated based on the template "${.current_template_name}".
+ * Changes to this file may cause incorrect behavior and will be lost if the code is regenerated.
+ */
+ 
 $(document).ready(function () {
 	addButtonListeners();
 	show${class_name}s();
@@ -24,8 +30,7 @@ function show${class_name}s() {
 				
 				<#-- PERSISTENT PROPERTIES  -->
 				<#list entity.persistentProperties as property>
-				<#if property.id>
-				<#else>
+				<#if property.showColumn>
 				<#if property.type.name=='Date'>
 				
 				var date = new Date(data[i].${property.name});
@@ -41,7 +46,7 @@ function show${class_name}s() {
 				<#-- LINKED PROPERTIES  -->
 				<#list entity.linkedProperties as property>
 				<#-- Many to many -->
-				<#if property.upper == -1 && property.oppositeEnd.upper == -1>
+				<#if (property.upper == -1 && property.oppositeEnd.upper == -1) || (property.upper == -1 && property.oppositeEnd.upper == 1)>
 				str += '<td> <a href="#" title="${property.name?cap_first}s" class="${property.name?lower_case}s" name="' + data[i].${id_class} + '" id="${property.name?lower_case}s' + data[i].${id_class} + '" ><i class="fas fa-external-link-alt" name="' + data[i].${id_class} + '"></i></a>';
 				</#if>
 				</#list>
@@ -53,7 +58,7 @@ function show${class_name}s() {
 			
 			<#list entity.linkedProperties as property>
 			<#-- Many to many -->
-			<#if property.upper == -1 && property.oppositeEnd.upper == -1>
+			<#if (property.upper == -1 && property.oppositeEnd.upper == -1) || (property.upper == -1 && property.oppositeEnd.upper == 1)>
  			$('.${property.name?lower_case}s').unbind("click").click(function () {
             	show${property.name?cap_first}(getSorceId(event));
             });
@@ -72,7 +77,7 @@ function show${class_name}s() {
 }
 
 <#list entity.linkedProperties as property>
-<#if property.upper == -1 && property.oppositeEnd.upper == -1>
+<#if (property.upper == -1 && property.oppositeEnd.upper == -1) || (property.upper == -1 && property.oppositeEnd.upper == 1)>
 	
 function show${property.name?cap_first}(id) {
 	$('#${class_name?lower_case}${property.name?cap_first}Modal').modal('show');
@@ -88,8 +93,7 @@ function show${property.name?cap_first}(id) {
 				str += '<tr>';
 				<#-- LINKED PROPERTIES  -->
 				<#list property.type.persistentProperties as persistentProperty>
-				<#if persistentProperty.id>
-				<#else>
+				<#if persistentProperty.showColumn>
 				str += '<td>'+data.${property.name?lower_case}[i].${persistentProperty.name}+'</td>';
 				</#if>
 				</#list>
