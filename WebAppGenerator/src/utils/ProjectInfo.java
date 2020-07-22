@@ -17,6 +17,7 @@ public class ProjectInfo {
 	private String projectPackage;
 
 	private String applicationName;
+	private String applicationFrontendName;
 	private String baseHandwrittenFilesPath;
 	private String baseGeneratedFilesPath;
 
@@ -150,6 +151,14 @@ public class ProjectInfo {
 
 	public void setBackendPath(String backendPath) {
 		this.backendPath = backendPath;
+	}
+
+	public String getApplicationFrontendName() {
+		return applicationFrontendName;
+	}
+
+	public void setApplicationFrontendName(String applicationFrontendName) {
+		this.applicationFrontendName = applicationFrontendName;
 	}
 
 }

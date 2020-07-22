@@ -1,13 +1,16 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class FMModel {
 
 	private static FMModel instance;
 
 	private List<FMEntity> entities = new ArrayList<FMEntity>();
+	private Map<String, List<String>> groups = new HashMap<>();
 	
 	private FMModel() {
 		// TODO Auto-generated constructor stub
@@ -27,6 +30,14 @@ public class FMModel {
 
 	public void setEntities(List<FMEntity> entities) {
 		this.entities = entities;
+	}
+
+	public Map<String, List<String>> getGroups() {
+		return groups;
+	}
+
+	public void setGroups(Map<String, List<String>> groups) {
+		this.groups = groups;
 	}
 
 }

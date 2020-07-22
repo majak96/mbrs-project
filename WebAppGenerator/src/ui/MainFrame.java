@@ -109,7 +109,7 @@ public class MainFrame extends JFrame {
 					projectInfo.setDatabaseUsername(databaseUsernameField.getText().trim());
 					projectInfo.setDatabasePassword(new String(databasePasswordField.getPassword()));
 					projectInfo.setResourceFile(resourceFilePath);
-					projectInfo.setApplicationName(applicationNameField.getText().trim());
+					projectInfo.setApplicationFrontendName(applicationNameField.getText().trim());
 					projectInfo.setApplicationPort(applicationPortField.getText().trim());
 					Application.generate();
 					JOptionPane.showMessageDialog(MainFrame.this,
@@ -130,7 +130,7 @@ public class MainFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				applicationNameField.setText("app");
+				applicationNameField.setText("Name of the App");
 				applicationPortField.setText("8080");
 				projectNameField.setText("example-project");
 				projectPackageField.setText("com.example");

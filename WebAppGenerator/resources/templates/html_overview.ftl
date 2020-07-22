@@ -34,14 +34,29 @@
             <!-- SIDEBAR  -->
             <nav id="sidebar">
                 <div class="sidebar-header">
-                    <a href="./index.html"><h3>Example app</h3></a>
+                    <a href="./index.html"><h3>${application_name}</h3></a>
                 </div>
 
                 <ul class="list-unstyled components">
-                    <#list entities as ent>
-                    <li class="active">
-                        <a href="./${ent?lower_case}.html">${ent}</a>
+                    <#list groups?keys as ent>
+                    <#if ent != 'Other'>
+	            	<li class="sidebar-dropdown">
+	            		<a href="#${ent}Menu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle" >${ent}</a>
+	            		<div class="sidebar-submenu">
+			              <ul class="collapse list-unstyled" id="${ent}Menu">
+			              <#list groups[ent] as group>
+			                <li><a href="./${group?lower_case}.html">${group}</a></li>
+			                </#list>
+			              </ul>
+			            </div>
+	            	</li>	
+	                <#else>
+                	<#list groups['Other'] as single>
+                	<li>
+                        <a href="./${single?lower_case}.html">${single}</a>
                     </li>
+                	</#list>
+                    </#if>
                     </#list>
                 </ul>
             </nav>

@@ -3,7 +3,6 @@ package generator;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.Writer;
-import java.util.ArrayList;
 import java.util.List;
 
 import freemarker.template.Template;
@@ -14,18 +13,13 @@ import utils.ProjectInfo;
 public class FrontendFormGenerator extends AbstractGenerator {
 
 	private List<FMEntity> entities;
-	private List<String> entityLabels;
 
 	@Override
 	public void init() {
 		FMModel parsedModel = FMModel.getInstance();
 		entities = parsedModel.getEntities();
-
-		entityLabels = new ArrayList<String>();
-		for (FMEntity entity : entities) {
-			entityLabels.add(entity.getLabel());
-		}
-		model.put("entities", entityLabels);
+		model.put("groups", parsedModel.getGroups());
+		model.put("application_name", projectInfo.getApplicationFrontendName());
 	}
 
 	@Override

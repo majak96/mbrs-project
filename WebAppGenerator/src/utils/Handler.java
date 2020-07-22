@@ -25,6 +25,7 @@ import model.MethodPropertyAccessModifier;
 public class Handler extends DefaultHandler {
 
 	private Map<String, FMEntity> entities = new HashMap<>();
+	private Map<String, List<String>> groups = new HashMap<>();
 	private Map<String, FMPersistentProperty> persistentProperties = new HashMap<>();
 	private Map<String, FMAssociation> associations = new HashMap<>();
 	private Map<String, FMLinkedProperty> linkedProperties = new HashMap<>();
@@ -271,6 +272,8 @@ public class Handler extends DefaultHandler {
 
 			if (entities.containsKey(baseClass)) {
 				FMEntity baseEntity = entities.get(baseClass);
+				
+		
 
 				// check if create exists
 				if (attributes.getValue("create") != null) {
@@ -278,31 +281,40 @@ public class Handler extends DefaultHandler {
 				} else {
 					baseEntity.setCreate(true);
 				}
-				
+
 				// check if update exists
 				if (attributes.getValue("update") != null) {
 					baseEntity.setUpdate(Boolean.parseBoolean(attributes.getValue("update")));
 				} else {
 					baseEntity.setUpdate(true);
 				}
-				
+
 				// check if delete exists
 				if (attributes.getValue("delete") != null) {
 					baseEntity.setDelete(Boolean.parseBoolean(attributes.getValue("delete")));
 				} else {
 					baseEntity.setDelete(true);
 				}
-				
+
 				// check if label exists
 				if (attributes.getValue("label") != null) {
 					baseEntity.setLabel(attributes.getValue("label"));
-				}
-				else {
+				} else {
 					baseEntity.setLabel(baseEntity.getName());
 				}
-				
+
 				if (attributes.getValue("group") != null) {
 					baseEntity.setGroup(attributes.getValue("group"));
+				}
+				
+				if(attributes.getValue("group") != null) {
+					if(groups.containsKey(attributes.getValue("group"))) {
+						groups.get(attributes.getValue("group")).add(baseEntity.getLabel());
+					} else {
+						List<String> entityList = new ArrayList<>();
+						entityList.add(baseEntity.getLabel());
+						groups.put(attributes.getValue("group"), entityList );
+					}
 				}
 
 			}
@@ -351,19 +363,19 @@ public class Handler extends DefaultHandler {
 
 				if (attributes.getValue("scale") != null) {
 					persistentProperty.setScale(Integer.parseInt(attributes.getValue("scale")));
-				} 
+				}
 
 				if (attributes.getValue("unique") != null) {
 					persistentProperty.setUnique(attributes.getValue("unique").equals("true"));
 				}
-				
+
 				if (attributes.getValue("jsonIgnore") != null) {
 					boolean ignore = Boolean.parseBoolean(attributes.getValue("jsonIgnore"));
 					persistentProperty.setJsonIgnore(ignore);
 
-					if(ignore)
+					if (ignore)
 						baseEntity.addImportedPackage(defaultTypes.get("JsonIgnore"));
-					
+
 				}
 			}
 
@@ -406,79 +418,77 @@ public class Handler extends DefaultHandler {
 				if (attributes.getValue("optional") != null) {
 					linkedProperty.setOptional(Boolean.parseBoolean(attributes.getValue("optional")));
 				}
-				
+
 				if (attributes.getValue("jsonIgnore") != null) {
 					boolean ignore = Boolean.parseBoolean(attributes.getValue("jsonIgnore"));
 					linkedProperty.setJsonIgnore(ignore);
 
-					if(ignore)
+					if (ignore)
 						baseEntity.addImportedPackage(defaultTypes.get("JsonIgnore"));
-					
-				} 
+
+				}
 			}
 
 			break;
-			
+
 		case "FrontendProfile:EditableProperty":
 			// set editable property tag values
 			baseProperty = attributes.getValue("base_Property");
-			
+
 			FMPersistentProperty property = null;
 
 			if (persistentProperties.containsKey(baseProperty)) {
 				property = persistentProperties.get(baseProperty);
-			} 
-			
-			if(property != null) {
+			}
+
+			if (property != null) {
 				property.setEditable(true);
 				property.setReadOnly(false);
-				
+
 				if (attributes.getValue("componentType") != null) {
 					property.setComponentType(ComponentType.valueOf(attributes.getValue("componentType")));
 				}
-				
+
 				if (attributes.getValue("label") != null) {
 					property.setLabel(attributes.getValue("label"));
-				}
-				else {
+				} else {
 					property.setLabel(property.getName());
 				}
-				
+
 				if (attributes.getValue("showColumn") != null) {
 					property.setShowColumn(Boolean.parseBoolean(attributes.getValue("showColumn")));
 				} else {
 					property.setShowColumn(true);
 				}
-				
+
 			}
 
 			break;
-			
+
 		case "FrontendProfile:ReadOnlyProperty":
 			// set read only property tag values
 			baseProperty = attributes.getValue("base_Property");
-			
+
 			property = null;
 
 			if (persistentProperties.containsKey(baseProperty)) {
 				property = persistentProperties.get(baseProperty);
-			} 
-			
-			if(property != null) {
+			}
+
+			if (property != null) {
 				property.setReadOnly(true);
 				property.setEditable(false);
-				
+
 				if (attributes.getValue("componentType") != null) {
 					property.setComponentType(ComponentType.valueOf(attributes.getValue("componentType")));
 				}
-				
+
 				if (attributes.getValue("label") != null) {
 					property.setLabel(attributes.getValue("label"));
-				}
-				else {
+				} else {
 					property.setLabel(property.getName());
 				}
-				
+
 				if (attributes.getValue("showColumn") != null) {
 					property.setShowColumn(Boolean.parseBoolean(attributes.getValue("showColumn")));
 				} else {
@@ -487,31 +497,30 @@ public class Handler extends DefaultHandler {
 			}
 
 			break;
-			
+
 		case "FrontendProfile:LookUpProperty":
 			// set lookup property tag values
 			baseProperty = attributes.getValue("base_Property");
-			
+
 			property = null;
 
 			if (persistentProperties.containsKey(baseProperty)) {
 				property = persistentProperties.get(baseProperty);
-			} 
-			
-			if(property != null) {
+			}
+
+			if (property != null) {
 				property.setLookUpProperty(true);
-				
+
 				if (attributes.getValue("componentType") != null) {
 					property.setComponentType(ComponentType.valueOf(attributes.getValue("componentType")));
 				}
-				
+
 				if (attributes.getValue("label") != null) {
 					property.setLabel(attributes.getValue("label"));
-				}
-				else {
+				} else {
 					property.setLabel(property.getName());
 				}
-				
+
 				if (attributes.getValue("showColumn") != null) {
 					property.setShowColumn(Boolean.parseBoolean(attributes.getValue("showColumn")));
 				} else {
@@ -520,51 +529,49 @@ public class Handler extends DefaultHandler {
 			}
 
 			break;
-			
+
 		case "FrontendProfile:Zoom":
 			// set zoom property tag values
 			baseProperty = attributes.getValue("base_Property");
-			
+
 			FMLinkedProperty linkedProperty = null;
 
-			if(linkedProperties.containsKey(baseProperty)) {
+			if (linkedProperties.containsKey(baseProperty)) {
 				linkedProperty = linkedProperties.get(baseProperty);
 			}
-			
-			if(linkedProperty != null) {
+
+			if (linkedProperty != null) {
 				linkedProperty.setZoom(true);
-				
+
 				if (attributes.getValue("label") != null) {
 					linkedProperty.setLabel(attributes.getValue("label"));
-				}
-				else {
+				} else {
 					linkedProperty.setLabel(linkedProperty.getName());
 				}
-				
+
 			}
 
 			break;
-			
+
 		case "FrontendProfile:Next":
 			// set next property tag values
 			baseProperty = attributes.getValue("base_Property");
-			
+
 			linkedProperty = null;
 
-			if(linkedProperties.containsKey(baseProperty)) {
+			if (linkedProperties.containsKey(baseProperty)) {
 				linkedProperty = linkedProperties.get(baseProperty);
 			}
-			
-			if(linkedProperty != null) {
+
+			if (linkedProperty != null) {
 				linkedProperty.setNext(true);
-				
+
 				if (attributes.getValue("label") != null) {
 					linkedProperty.setLabel(attributes.getValue("label"));
-				}
-				else {
+				} else {
 					linkedProperty.setLabel(linkedProperty.getName());
 				}
-				
+
 			}
 
 			break;
@@ -635,6 +642,7 @@ public class Handler extends DefaultHandler {
 
 		List<FMEntity> entitiesList = new ArrayList<FMEntity>(entities.values());
 		model.setEntities(entitiesList);
+		model.setGroups(groups);
 
 		System.out.println("******************************************");
 

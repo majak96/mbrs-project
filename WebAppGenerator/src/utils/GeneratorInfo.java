@@ -13,6 +13,7 @@ public class GeneratorInfo {
 
 	private Configuration configuration;
 
+	@SuppressWarnings("deprecation")
 	private GeneratorInfo() {
 		configuration = new Configuration();
 
