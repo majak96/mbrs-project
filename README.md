@@ -14,6 +14,13 @@ The output of the generator is a web application with back-end implemented using
 
 The application was created for the purpose of the Agile Software Development Methodology course at the Faculty of Technical Sciences, University of Novi Sad.
 
+## UML Profiles
+
+### Backend Profile
+![backend_profile](profile/images/backendProfile.JPG)
+
+### Frontend Profile
+![frontend_profile](profile/images/frontendProfile.JPG)
 
 ## Instructions
 
