@@ -2,6 +2,7 @@ package utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +15,7 @@ import model.ClassAccessModifier;
 import model.ComponentType;
 import model.FMAssociation;
 import model.FMEntity;
+import model.FMEnumeration;
 import model.FMLinkedProperty;
 import model.FMModel;
 import model.FMPersistentProperty;
@@ -31,10 +33,12 @@ public class Handler extends DefaultHandler {
 	private Map<String, FMLinkedProperty> linkedProperties = new HashMap<>();
 	private Map<String, FMType> defaultTypes = new HashMap<>();
 	private Map<String, String> propertyTypesMap = new HashMap<>();
+	private Map<String, FMEnumeration> enumerations = new HashMap<>();
 
 	private String currentClass;
 	private String currentProperty;
 	private String currentAssociation;
+	private String currentEnum;
 
 	@Override
 	public void startDocument() throws SAXException {
@@ -87,6 +91,14 @@ public class Handler extends DefaultHandler {
 
 				FMAssociation newAssociation = new FMAssociation(attributes.getValue("name"));
 				associations.put(attributes.getValue("xmi:id"), newAssociation);
+			} else if (attributes.getValue("xmi:type") != null && attributes.getValue("xmi:type").equals("uml:Enumeration")) {
+				currentEnum = attributes.getValue("xmi:id");
+
+				FMEnumeration enumeration = new FMEnumeration(attributes.getValue("name"),
+						ProjectInfo.getInstance().getProjectPackage() + ".model");
+				enumerations.put(attributes.getValue("xmi:id"), enumeration);
+			} else {
+				currentEnum = null;
 			}
 
 			break;
@@ -116,7 +128,14 @@ public class Handler extends DefaultHandler {
 				// save persistent property to entity
 				if (attributes.getValue("association") == null) {
 					FMPersistentProperty newProperty = new FMPersistentProperty(attributes.getValue("name"), modifier);
-
+					if (attributes.getValue("type") != null) { 
+						if(enumerations.containsKey(attributes.getValue("type"))) {
+							newProperty.setType(enumerations.get(attributes.getValue("type")));
+						} else {
+							propertyTypesMap.put(currentProperty, attributes.getValue("type"));
+						}
+						
+					}
 					persistentProperties.put(currentProperty, newProperty);
 					entity.addPersistentProperties(newProperty);
 				}
@@ -272,8 +291,6 @@ public class Handler extends DefaultHandler {
 
 			if (entities.containsKey(baseClass)) {
 				FMEntity baseEntity = entities.get(baseClass);
-				
-		
 
 				// check if create exists
 				if (attributes.getValue("create") != null) {
@@ -306,14 +323,14 @@ public class Handler extends DefaultHandler {
 				if (attributes.getValue("group") != null) {
 					baseEntity.setGroup(attributes.getValue("group"));
 				}
-				
-				if(attributes.getValue("group") != null) {
-					if(groups.containsKey(attributes.getValue("group"))) {
+
+				if (attributes.getValue("group") != null) {
+					if (groups.containsKey(attributes.getValue("group"))) {
 						groups.get(attributes.getValue("group")).add(baseEntity.getLabel());
 					} else {
 						List<String> entityList = new ArrayList<>();
 						entityList.add(baseEntity.getLabel());
-						groups.put(attributes.getValue("group"), entityList );
+						groups.put(attributes.getValue("group"), entityList);
 					}
 				}
 
@@ -575,6 +592,17 @@ public class Handler extends DefaultHandler {
 			}
 
 			break;
+		case "ownedLiteral":
+			if (currentEnum != null) {
+				FMEnumeration enumerationCurrent = enumerations.get(currentEnum);
+				if (enumerationCurrent.getOptions() == null)
+					enumerationCurrent.setOptions(new ArrayList<>());
+
+				if (attributes.getValue("name") != null) {
+					enumerationCurrent.getOptions().add(attributes.getValue("name"));
+				}
+			}
+			break;
 
 		}
 	}
@@ -591,6 +619,10 @@ public class Handler extends DefaultHandler {
 				// if linked property doesn't have a name - set to type name
 				if (linkedProperty.getName() == null)
 					linkedProperty.setName(entity.getName().toLowerCase());
+			} else if (this.enumerations.containsKey(entry.getValue()) && this.persistentProperties.containsKey(entry.getKey())){
+				FMPersistentProperty property = this.persistentProperties.get(entry.getKey());
+				FMEnumeration enumeration = this.enumerations.get(entry.getValue());
+				property.setType(enumeration);
 			}
 		}
 
@@ -697,6 +729,14 @@ public class Handler extends DefaultHandler {
 			}
 
 			System.out.println("******************************************");
+		}
+		
+		System.out.println("ENUMERATIONS: ");
+		for (Map.Entry<String, FMEnumeration> entry : enumerations.entrySet()) {
+			System.out.println("Name: " + entry.getValue().getName());
+			for(String option : entry.getValue().getOptions()) {
+				System.out.println("OPTION: " + option);
+			}
 		}
 
 	}

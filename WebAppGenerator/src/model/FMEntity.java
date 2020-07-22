@@ -11,29 +11,28 @@ public class FMEntity extends FMType {
 	private FMEntity ancestor;
 
 	private ClassAccessModifier accessModifier;
-	
+
 	private String tableName;
-	
+
 	private String label;
-	
+
 	private Boolean create;
-	
+
 	private Boolean update;
-	
+
 	private Boolean delete;
-	
+
 	private String group;
 
 	private List<FMPersistentProperty> persistentProperties = new ArrayList<FMPersistentProperty>();
 	private List<FMLinkedProperty> linkedProperties = new ArrayList<FMLinkedProperty>();
-
 
 	private Set<FMType> importedPackages = new HashSet<FMType>();
 
 	public FMEntity(String name, String typePackage) {
 		super(name, typePackage);
 	}
-	
+
 	public Set<FMType> getImportedPackages() {
 		return importedPackages;
 	}
@@ -117,11 +116,11 @@ public class FMEntity extends FMType {
 	public void setImportedPackages(Set<FMType> importedPackages) {
 		this.importedPackages = importedPackages;
 	}
-	
+
 	public void addLinkedProperties(FMLinkedProperty linkedProperty) {
 		linkedProperties.add(linkedProperty);
 	}
-	
+
 	public void addPersistentProperties(FMPersistentProperty persistentProperty) {
 		persistentProperties.add(persistentProperty);
 	}
