@@ -33,21 +33,36 @@
     <body>
         <div class="wrapper">
 
-            <!-- SIDEBAR  -->
+           <!-- SIDEBAR  -->
             <nav id="sidebar">
                 <div class="sidebar-header">
-                    <a href="./index.html"><h3>Example app</h3></a>
+                    <a href="./index.html"><h3>${application_name}</h3></a>
                 </div>
 
                 <ul class="list-unstyled components">
-                    <#list entities as ent>
-                    <li class="active">
-                        <a href="./${ent?lower_case}.html">${ent}</a>
+                    <#list groups?keys as ent>
+                    <#if ent != 'Other'>
+	            	<li class="sidebar-dropdown">
+	            		<a href="#${ent}Menu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle" >${ent}</a>
+	            		<div class="sidebar-submenu">
+			              <ul class="collapse list-unstyled" id="${ent}Menu">
+			              <#list groups[ent] as group>
+			                <li><a href="./${group?lower_case}.html">${group}</a></li>
+			                </#list>
+			              </ul>
+			            </div>
+	            	</li>	
+	                <#else>
+                	<#list groups['Other'] as single>
+                	<li>
+                        <a href="./${single?lower_case}.html">${single}</a>
                     </li>
+                	</#list>
+                    </#if>
                     </#list>
                 </ul>
             </nav>
-
+            
             <!-- PAGE CONTENT  -->
             <div id="content">
                 <div class="container">
@@ -69,7 +84,7 @@
                     <div class="container" style="margin-top: 5%">
                         <form id="${entity.name?lower_case}Form">
                             <!-- FORM FIELDS FOR PERSISTENT PROPERTIES -->
-                            <#list entity.persistentProperties as property>
+                            <#list persistentProperties as property>
                             <#if property.editable>
                                 <div class="form-group">
                                     <label for="name">${property.label}:</label>
@@ -83,6 +98,22 @@
                                     <input type="number" class="form-control" name="${property.name}" id="${property.name}">
                                     <#elseif property.componentType == "DATE_FIELD">
                                     <input class="form-control" type="date" name="${property.name}" id="${property.name}">
+                                    </#if>
+                                </div>
+                            </#if>
+                            </#list>
+
+                            <!-- FORM FIELDS FOR ENUM PROPERTIES -->
+                            <#list enumerations as property>
+                            <#if property.editable>
+                                <div class="form-group">
+                                    <#if property.componentType == "COMBOBOX">
+                                    <label for="name">${property.label}:</label>
+                                    <select class="form-control" name="${property.name}" id="${property.name}">
+                                        <#list property.type.options as opt>
+                                            <option value="${opt}">${opt}</option>
+                                        </#list>
+                                    </select>
                                     </#if>
                                 </div>
                             </#if>

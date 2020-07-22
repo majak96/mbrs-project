@@ -32,6 +32,7 @@ public class GeneratorRegistry {
 		generators.add(new FrontendFormGenerator());
 		generators.add(new IndexHTMLGenerator());
 		generators.add(new OverviewHTMLGenerator());
+		generators.add(new EnumGenerator());
 	}
 
 	public void generate() {
