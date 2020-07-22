@@ -6,6 +6,5 @@ public enum ComponentType {
 	COMBOBOX,
 	CHECKBOX,
 	DATE_FIELD,
-	RADIO_BUTTON,
 	NUMBER_FIELD
 }

@@ -3,11 +3,14 @@ package generator;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.List;
 
 import freemarker.template.Template;
 import model.FMEntity;
+import model.FMEnumeration;
 import model.FMModel;
+import model.FMPersistentProperty;
 import utils.ProjectInfo;
 
 public class FrontendFormGenerator extends AbstractGenerator {
@@ -29,11 +32,25 @@ public class FrontendFormGenerator extends AbstractGenerator {
 
 			model.put("entity", entity);
 
+			List<FMPersistentProperty> persistentProperties = new ArrayList<FMPersistentProperty>();
+			List<FMPersistentProperty> enumerations = new ArrayList<FMPersistentProperty>();
+			for (FMPersistentProperty property : entity.getPersistentProperties()) {
+				if (property.getType() instanceof FMEnumeration) {
+					enumerations.add(property);
+				} else {
+					persistentProperties.add(property);
+				}
+			}
+			
+			model.put("persistentProperties", persistentProperties);
+			model.put("enumerations", enumerations);
+
 			try {
 				Template temp = generatorInfo.getConfiguration().getTemplate("html_form.ftl");
 
 				String entityName = entity.getName().toLowerCase();
-				File file = new File(ProjectInfo.getInstance().getFrontendPath() + File.separatorChar + entityName + "Form.html");
+				File file = new File(
+						ProjectInfo.getInstance().getFrontendPath() + File.separatorChar + entityName + "Form.html");
 				file.createNewFile();
 
 				Writer fileWriter = new FileWriter(file);
