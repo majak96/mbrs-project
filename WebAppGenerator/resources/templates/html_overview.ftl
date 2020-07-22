@@ -125,7 +125,8 @@
                 <div class="modal-body">
                     <form id="${entity.name?lower_case}${property.name?cap_first}Form">
                         <div class="form-group">
-                            <table class="table table-bordered">
+                            <div id="${property.name}-empty">There are no ${property.label} selected.</div>
+                            <table id="${property.name}-notEmpty" class="table table-bordered">
                                 <thead>
                                     <tr>
                                     	<#list property.type.persistentProperties as prop>
@@ -156,7 +157,8 @@
                     <button type="button" class="close" data-dismiss="modal">×</button>
                 </div>
                 <div class="modal-body">
-                    <table>
+                    <div id="${property.name}-empty">${property.label} is not chosen.</div>
+                    <table id="${property.name}-notEmpty">
                         <thead>
                             <#list property.type.persistentProperties as prop>
                             <#if prop.showColumn>

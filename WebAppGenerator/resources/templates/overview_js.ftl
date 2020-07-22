@@ -82,7 +82,14 @@ function show${property.name?cap_first}(id) {
 		type: 'GET',
 		contentType: 'application/json',
 		success: function (data) {
-
+			if(data.${property.name} ==null || data.${property.name}.length===0){
+				$('#${property.name}-empty').show();
+				$('#${property.name}-notEmpty').hide();	
+			}
+			else{
+				$('#${property.name}-empty').hide();
+				$('#${property.name}-notEmpty').show();	
+			}
 			str ="";
 			for (i in data.${property.name}) {
 				str += '<tr>';
@@ -116,6 +123,8 @@ function show${property.name?cap_first}(id) {
 		contentType: 'application/json',
 		success: function (data) {
 			if (data.${property.name} != null) {
+				$('#${property.name}-empty').hide();
+				$('#${property.name}-notEmpty').show();	
 				<#list property.type.persistentProperties as prop>
                 <#if prop.showColumn>
 				<#if prop.type.name=='Date'>
@@ -128,6 +137,8 @@ function show${property.name?cap_first}(id) {
 				</#if>
 				</#list>
 			}else{
+				$('#${property.name}-empty').show();
+				$('#${property.name}-notEmpty').hide();				
 				<#list property.type.persistentProperties as prop>
                 <#if prop.showColumn>
 				$('#${prop.name}').text("");
