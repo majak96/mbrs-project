@@ -24,8 +24,10 @@
         <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js"></script>
         <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js"></script>
 
-        <link rel="stylesheet" href="css/index.css">
-        <script src="js/${entity.name?lower_case}-form.js"></script>
+        <link rel="stylesheet" href="css/index_base.css">
+        <script src="js/${entity.name?lower_case}-form-base.js"></script>
+        <script src="../src/js/${entity.name?lower_case}-form.js"></script>
+        
     </head>
 
     <body>
@@ -103,7 +105,7 @@
         <#list entity.linkedProperties as property>
         <!-- MODAL DIALOGS FOR LINKED PROPERTIES -->
         <div class="modal fade" id="${entity.name?lower_case}${property.name?cap_first}Modal">
-            <div class="modal-dialog modal-lg" style="max-width: 70%;">
+            <div class="modal-dialog modal-lg" style="min-width: auto; max-width: fit-content; min-width: 30%;">
                 <div class="modal-content">
 
                     <div class="modal-header">

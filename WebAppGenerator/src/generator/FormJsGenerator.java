@@ -3,6 +3,8 @@ package generator;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.Writer;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 
 import freemarker.template.Template;
@@ -20,7 +22,7 @@ public class FormJsGenerator extends AbstractGenerator {
 
 	@Override
 	public void generate() {
-		String overviewPath = ProjectInfo.getInstance().getFrontendPath() + File.separator + "js";
+		String overviewPath = ProjectInfo.getInstance().getFrontendPath() + File.separator + "src-gen" + File.separator + "js";
 		GeneratorUtils.createDirectory(overviewPath);
 		FMModel modelMap = FMModel.getInstance();
 		List<FMEntity> entities = modelMap.getEntities();
@@ -34,15 +36,20 @@ public class FormJsGenerator extends AbstractGenerator {
 				model.put("entity", entity);
 
 				String entityName = entity.getName().substring(0, 1).toLowerCase() + entity.getName().substring(1);
-				File file = new File(overviewPath + File.separatorChar + entityName + "-form.js");
-				file.createNewFile();
+				File baseFile = new File(overviewPath + File.separatorChar + entityName + "-form-base.js");
+				baseFile.createNewFile();
 				
-				Writer fileWriter = new FileWriter(file);
+				Writer fileWriter = new FileWriter(baseFile);
 
 				temp.process(model, fileWriter);
 
 				fileWriter.flush();
 				fileWriter.close();
+				
+				if(Files.notExists(Paths.get(projectInfo.getFrontendPath() + File.separator + "src" + File.separator + "js" + File.separator + entityName + "-form.js"))){
+					File file = new File(projectInfo.getFrontendPath() + File.separator + "src" + File.separator + "js" + File.separator + entityName + "-form.js");
+					file.createNewFile();
+				}
 			}
 
 		} catch (Exception e) {

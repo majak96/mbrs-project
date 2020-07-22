@@ -39,7 +39,7 @@ public class OverviewHTMLGenerator  extends AbstractGenerator {
 				Template temp = generatorInfo.getConfiguration().getTemplate("html_overview.ftl");
 
 				String entityName = entity.getName().toLowerCase();
-				File file = new File(ProjectInfo.getInstance().getFrontendPath() + File.separatorChar + entityName + ".html");
+				File file = new File(ProjectInfo.getInstance().getFrontendPath() + File.separator + "src-gen" + File.separatorChar + entityName + ".html");
 				file.createNewFile();
 
 				Writer fileWriter = new FileWriter(file);

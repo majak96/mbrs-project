@@ -24,8 +24,9 @@
 	    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js"></script>
 	    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js"></script>
 	
-	    <link rel="stylesheet" href="css/index.css">
-	    <script src="js/index.js"></script>
+        <link rel="stylesheet" href="css/index_base.css">
+	    <script src="js/index-base.js"></script>
+	    <script src="../src/js/index.js"></script>
 	
 	</head>
 	

@@ -27,7 +27,7 @@ public class GeneratorRegistry {
 		generators.add(new ControllerGenerator());
 		generators.add(new ServiceBaseGenerator());
 		generators.add(new ServiceGenerator());
-		generators.add(new OvirviewJsGenerator());
+		generators.add(new OverviewJsGenerator());
 		generators.add(new FormJsGenerator());
 		generators.add(new FrontendFormGenerator());
 		generators.add(new IndexHTMLGenerator());
@@ -61,13 +61,46 @@ public class GeneratorRegistry {
 
 		// create the project structure for frontend generated files
 		GeneratorUtils.createDirectory(frontendPath);
-		GeneratorUtils.createDirectory(frontendPath + File.separator + "css");
-		GeneratorUtils.createDirectory(frontendPath + File.separator + "js");
 
-		if(Files.notExists(Paths.get(frontendPath + File.separator + "css/index.css"))){
+		GeneratorUtils.createDirectory(frontendPath + File.separator + "src-gen");
+		GeneratorUtils.createDirectory(frontendPath + File.separator + "src");
+
+		GeneratorUtils.createDirectory(frontendPath + File.separator + "src-gen" + File.separator + "css");
+		GeneratorUtils.createDirectory(frontendPath + File.separator + "src-gen" + File.separator + "js");
+
+		GeneratorUtils.createDirectory(frontendPath + File.separator + "src" + File.separator + "css");
+		GeneratorUtils.createDirectory(frontendPath + File.separator + "src" + File.separator + "js");
+
+		if(Files.notExists(Paths.get(frontendPath + File.separator + "src-gen" + File.separator + "css/index_base.css"))){
 			try {
-				Files.copy(Paths.get("resources/index.css"), Paths.get(frontendPath + File.separator + "css/index.css"));
+				Files.copy(Paths.get("resources/index_base.css"), Paths.get(frontendPath + File.separator + "src-gen" + File.separator + "css/index_base.css"));
 			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		if(Files.notExists(Paths.get(frontendPath + File.separator + "src" + File.separator + "css/index.css"))){
+			try {
+				File file = new File(frontendPath + File.separator + "src" + File.separator + "css/index.css");
+				file.createNewFile();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		if(Files.notExists(Paths.get(frontendPath + File.separator + "src-gen" + File.separator + "js/index-base.js"))){
+			try {
+				Files.copy(Paths.get("resources/index-base.js"), Paths.get(frontendPath + File.separator + "src-gen" + File.separator + "js/index-base.js"));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		if(Files.notExists(Paths.get(frontendPath + File.separator + "src" + File.separator + "js/index.js"))){
+			try {
+				File file = new File(frontendPath + File.separator + "src" + File.separator + "js/index.js");
+				file.createNewFile();
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}

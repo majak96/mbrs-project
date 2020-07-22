@@ -32,7 +32,7 @@ public class IndexHTMLGenerator extends AbstractGenerator {
 		try {
 			Template temp = generatorInfo.getConfiguration().getTemplate("html_index.ftl");
 
-			File file = new File(ProjectInfo.getInstance().getFrontendPath() + File.separatorChar + "index.html");
+			File file = new File(ProjectInfo.getInstance().getFrontendPath() + File.separator + "src-gen" + File.separatorChar + "index.html");
 			file.createNewFile();
 
 			Writer fileWriter = new FileWriter(file);

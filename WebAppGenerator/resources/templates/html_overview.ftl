@@ -24,8 +24,10 @@
         <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js"></script>
         <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js"></script>
 
-        <link rel="stylesheet" href="css/index.css">
-        <script src="js/${entity.name?lower_case}.js"></script>
+        <link rel="stylesheet" href="css/index_base.css">
+        <script src="js/${entity.name?lower_case}-base.js"></script>
+        <script src="../src/js/${entity.name?lower_case}.js"></script>
+        
     </head>
     
      <body>
@@ -98,7 +100,7 @@
     <#list entity.linkedProperties as property>
     <#if (property.upper == -1 && property.oppositeEnd.upper == -1) || (property.upper == -1 && property.oppositeEnd.upper == 1)>
     <div class="modal fade" id="${entity.name?lower_case}${property.name?cap_first}Modal">
-        <div class="modal-dialog modal-lg" style="max-width: 60%;">
+        <div class="modal-dialog modal-lg" style="min-width: auto; max-width: fit-content; min-width: 20%;">
             <div class="modal-content">
 
                 <div class="modal-header">
@@ -131,7 +133,7 @@
     </div>
     <#else>
     <div class="modal fade" id="${entity.name?lower_case}${property.name?cap_first}Modal">
-        <div class="modal-dialog modal-lg" style="max-width: 60%;">
+        <div class="modal-dialog modal-lg" style="min-width: auto; max-width: fit-content; min-width: 20%;">
             <div class="modal-content">
 
                 <div class="modal-header">

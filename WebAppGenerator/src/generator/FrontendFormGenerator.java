@@ -39,7 +39,7 @@ public class FrontendFormGenerator extends AbstractGenerator {
 				Template temp = generatorInfo.getConfiguration().getTemplate("html_form.ftl");
 
 				String entityName = entity.getName().toLowerCase();
-				File file = new File(ProjectInfo.getInstance().getFrontendPath() + File.separatorChar + entityName + "Form.html");
+				File file = new File(ProjectInfo.getInstance().getFrontendPath() + File.separator + "src-gen" + File.separatorChar + entityName + "Form.html");
 				file.createNewFile();
 
 				Writer fileWriter = new FileWriter(file);

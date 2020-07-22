@@ -137,6 +137,14 @@ function all${property.name?cap_first}(event) {
 				$("#${property.name}Tbody").append(str);
 				$('#${class_name?lower_case}${property.name?cap_first}Modal').modal('show');
 
+				<#if (property.upper == 1 && property.oppositeEnd.upper == -1) || (property.upper == 1 && property.oppositeEnd.upper == 1)>
+				$('input').click(function(e){
+					if (e.ctrlKey) {
+						$(this).prop('checked', false);
+					}
+				});
+				</#if>
+
 				$('#${property.name}PositiveBtnId').unbind("click").click(choose${property.name?cap_first}(event));
 
 			},
@@ -256,6 +264,14 @@ function edit${class_name?cap_first}(id) {
 
 				$('#${property.name}Btn').unbind("click").click(function(){
 					$('#${class_name?lower_case}${property.name?cap_first}Modal').modal('show');
+
+					<#if (property.upper == 1 && property.oppositeEnd.upper == -1) || (property.upper == 1 && property.oppositeEnd.upper == 1)>
+					$('input').click(function(e){
+						if (e.ctrlKey) {
+							$(this).prop('checked', false);
+						}
+					});
+					</#if>
 
 					$('#${property.name}PositiveBtnId').unbind("click").click(function () {
 						event.preventDefault();
