@@ -2,7 +2,6 @@ package utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -675,7 +674,8 @@ public class Handler extends DefaultHandler {
 		List<FMEntity> entitiesList = new ArrayList<FMEntity>(entities.values());
 		model.setEntities(entitiesList);
 		model.setGroups(groups);
-
+		List<FMEnumeration> enumerationList = new ArrayList<FMEnumeration>(enumerations.values());
+		model.setEnumerations(enumerationList);
 		System.out.println("******************************************");
 
 		for (Map.Entry<String, FMEntity> entry : entities.entrySet()) {

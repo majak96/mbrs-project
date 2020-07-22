@@ -4,6 +4,10 @@ package ${entity.typePackage};
 <#list imports as import>
 import ${import.typePackage}.${import.name};
 </#list>
+<#if enumeration_properties?size gt 0>
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+</#if>
 
 /**
  * [${.now}]
@@ -15,7 +19,7 @@ import ${import.typePackage}.${import.name};
 ${entity.accessModifier} class Base${entity.name?cap_first} <#if (entity.ancestor)??>extends ${entity.ancestor.name}</#if>{ 
 
 	<#-- PERSISTENT PROPERTIES  -->
-	<#list entity.persistentProperties as property>
+	<#list persistent_properties as property>
 	<#if property.id>
 	@Id<#if (property.generatedValue)??>${'\n\t'}@GeneratedValue(strategy = GenerationType.${property.generatedValue})</#if>
 	<#else>
@@ -40,6 +44,25 @@ ${entity.accessModifier} class Base${entity.name?cap_first} <#if (entity.ancesto
 		   </#if>
 		   <#lt>)</#if>
 	</#if>
+	<#if property.jsonIgnore>
+	@JsonIgnore
+	</#if>
+	${property.accessModifier} ${property.type.name} ${property.name};<#if !property?is_last>${'\n'}</#if>
+	</#list>
+	<#-- ENUM PROPERTIES  -->
+	<#list enumeration_properties as property>
+	@Enumerated(EnumType.STRING)
+	@Column<#if (property.columnName)?? || (property.unique)?? || property.lower == 0>(<#rt>
+		   <#if (property.columnName)??>
+		       <#lt>name = "${property.columnName}"<#rt>
+		   </#if>
+		   <#if (property.unique)??>
+		       <#lt><#if (property.columnName)??>, </#if>unique = ${property.unique?c}<#rt>
+		   </#if>
+		   <#if property.lower == 0>
+		       <#lt><#if (property.columnName)?? || (property.unique)??>, </#if>nullable = true<#rt>
+		   </#if>
+		   <#lt>)</#if>
 	<#if property.jsonIgnore>
 	@JsonIgnore
 	</#if>

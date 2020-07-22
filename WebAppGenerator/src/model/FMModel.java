@@ -10,6 +10,7 @@ public class FMModel {
 	private static FMModel instance;
 
 	private List<FMEntity> entities = new ArrayList<FMEntity>();
+	private List<FMEnumeration> enumerations = new ArrayList<>();
 	private Map<String, List<String>> groups = new HashMap<>();
 	
 	private FMModel() {
@@ -38,6 +39,14 @@ public class FMModel {
 
 	public void setGroups(Map<String, List<String>> groups) {
 		this.groups = groups;
+	}
+
+	public List<FMEnumeration> getEnumerations() {
+		return enumerations;
+	}
+
+	public void setEnumerations(List<FMEnumeration> enumerations) {
+		this.enumerations = enumerations;
 	}
 
 }

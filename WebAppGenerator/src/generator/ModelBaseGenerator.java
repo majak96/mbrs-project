@@ -10,7 +10,9 @@ import java.util.List;
 
 import freemarker.template.Template;
 import model.FMEntity;
+import model.FMEnumeration;
 import model.FMModel;
+import model.FMPersistentProperty;
 import model.FMType;
 import utils.ProjectInfo;
 
@@ -41,6 +43,19 @@ public class ModelBaseGenerator extends AbstractGenerator {
 
 			model.put("entity", entity);
 			model.put("imports", imports);
+
+			List<FMPersistentProperty> persistentProperties = new ArrayList<FMPersistentProperty>();
+			List<FMPersistentProperty> enumerations = new ArrayList<FMPersistentProperty>();
+			for (FMPersistentProperty property : entity.getPersistentProperties()) {
+				if (property.getType() instanceof FMEnumeration) {
+					enumerations.add(property);
+				} else {
+					persistentProperties.add(property);
+				}
+			}
+			
+			model.put("persistent_properties", persistentProperties);
+			model.put("enumeration_properties", enumerations);
 
 			try {
 				Template temp = generatorInfo.getConfiguration().getTemplate("model_base.ftl");
